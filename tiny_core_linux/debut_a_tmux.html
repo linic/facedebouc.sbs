@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Du début jusqu'à tmux</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Du début jusqu'à tmux</h1>
+  <h2>Le matériel</h2>
+  <p>
+    J'ai un IBM ThinkPad 560Z Pentium II d'octobre 1998 et un IBM ThinkPad 600X 
+    Pentium III produit en avril 2000. Le 600X a un lecteur CD et le 560Z n'a
+    pas de lecteur disquette ni de lecteur CD. Les deux portables fonctionnent 
+    encore très bien. C'est très étonnant pour moi le 560Z qui a maintenant 25 
+    ans.
+  </p>
+  <p>
+    À travers mes recherches, j'ai trouvé qu'il est possible d'installer la 
+    version sans interface graphique de TinyCoreLinux sur le 600X par un CD de 
+    CoreLinux 14. Ensuite, il est possible de prendre le SSD et de le 
+    transférer directement au 560Z et il va fonctionner. Le 560Z dispose d'un 
+    port USB. Avec un adapteur USB à Fast Ethernet, on peut atteindre des 
+    vitesses de 1,1 Mbits/seconde. C'est très bon à mon avis pour un aussi 
+    vieil ordinateur!
+  </p>
+  <p>
+    J'ai trouvé cet IBM ThinkPad 560Z PII Mobile 233 @ 300 MHz avec 64 MB RAM 
+    vers 2012 si je me souviens bien. Le couvercle est craqué comme si une 
+    brique était tombée dessus. Tout le reste est fonctionnel. La RAM peut être 
+    augmentée d'un autre 64 Mo parce qu'il y a une fente libre sous le 
+    portable, mais je n'ai pas encore trouvé de module bon marché.
+  </p>
+  <p>
+    J'utilise un adapteur USB vers IDE 44 pins pour pouvoir faire des 
+    sauvegardes du disque avec la commande <code>dd</code>. Un adapteur comme 
+    celui-ci: 
+    <a href="https://www.amazon.ca/FIDECO-Adapter-Duplicator-Function-Tool-Free/dp/B077N2KK27/ref=sxin_17_pa_sp_search_thematic_sspa?content-id=amzn1.sym.4f6e6932-d06f-42ee-a8ef-571593d9d791%3Aamzn1.sym.4f6e6932-d06f-42ee-a8ef-571593d9d791&cv_ct_cx=adaptateur+ide+usb&keywords=adaptateur+ide+usb&pd_rd_i=B077N2KK27&pd_rd_r=bf5b33f4-ae4e-45b6-9214-ed1928911f01&pd_rd_w=c6nRu&pd_rd_wg=GvNWX&pf_rd_p=4f6e6932-d06f-42ee-a8ef-571593d9d791&pf_rd_r=BFM65HB150FFX4K109QH&qid=1697883135&sbo=RZvfv%2F%2FHxDF%2BO5021pAnSA%3D%3D&sr=1-4-acb80629-ce74-4cc5-9423-11e8801573fb-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9zZWFyY2hfdGhlbWF0aWM&psc=1">
+      FIDECO SATA/IDE to USB 3.0 Adapter, Hard Drive Adapter Cable Converter for 
+      Universal 2.5/3.5 Inch SATA and IDE HDD, 2.5 Inch SSD, 5.25-Inch 
+      DVD-ROM/CD-ROM/CD-RW/DVD-RW/DVD+RW
+    </a>.
+  </p>
+  <p>
+    J'ai utilisé un SSD et un adapteur IDE 44 pins vers M.2 NGFF SATA comme 
+    celui-ci: 
+    <a href="https://www.ebay.ca/itm/123459365354">
+      M.2 NGFF SATA SSD to 2.5 IDE 44pin Converter Adapter with Case Black
+    </a>. Pour le SSD, j'ai utilisé le 
+    <a href="https://www.canadacomputers.com/product_info.php?cPath=179_4229&item_id=114574">
+      WDS500G2B0B WD Blue™ 3D NAND SATA M.2 2280 SSD, 500GB
+    </a>
+  </p>
+  <h2>L'installation de Core Linux 14</h2>
+  <p>
+    Voici les étapes pour essayer Core 14.0 sur le Thinkpad 600X:
+  </p>
+  <ol type="1">
+    <li>
+      Créer un CD bootable à partir des instructions sur 
+      <a href="http://tinycorelinux.net/install.html">tinycorelinux.net/install.html</a>
+    </li>
+    <li>
+      Connecter un adapteur USB 2.0 vers Ethernet 10/100 au seul port  USB port 
+      du 600X. J'ai trouvé le mien sur eBay en juillet 2023: 
+      <a href="https://www.ebay.ca/itm/265642724466">Adaptateur Réseau Clé USB 
+      Ethernet Lan RJ45 Carte Pour Windows 7 8 10 Vista XP</a>. Sur certaines 
+      machines il apparaît comme un Realtek FE (Fast Ethernet). Core 14.0 le 
+      détecte automatiquement.
+    </li>
+    <li>
+      Démarrer le 600X à partir du CD. Après le démarrage, il est possible de 
+      vérifier l'adresse ip avec <code>ifconfig</code>
+    </li>
+  </ol>
+  <p>
+    À ce point-ci, on utilise le CD directement et rien n'est installé sur le 
+    disque dur encore. Les vieux portables comme le 600X et le 560Z ont des 
+    capacités de disque dur limitées. J'ai trouvé que la première partition sur 
+    le disque ne peut pas dépasser 7Go. Par défaut l'installation sur disque 
+    dur de Core 14 va prendre tout le disque et comme j'ai installé un SSD de 
+    500 Go, ce n'est pas vraiment une option. Core 14 s'installera, mais le 
+    portable ne démarrera pas ensuite. Voici mes étapes pour surmonter ce 
+    problème. L'idée est de commencer avec une petite partition. Plus tard, on 
+    pourra repartitionner le disque et utiliser tout l'espace du SSD. Si la 
+    partition est trop grande, vous verrez <code>Boot Error</code> sur l'écran 
+    et puis rien d'autre ne se passera. Il faudra fermer de force en maintenant 
+    le bouton d'allumage.
+  </p>
+  <p>
+    Voici les étapes d'installation Frugal de Core 14:
+  </p>
+  <ol type="1">
+    <li>
+      Créer une partition ext4 de 1 GB au début du disque IDE en connectant le 
+      disque à un autre ordinateur debian et en utilisant <code>gparted</code>
+    </li>
+    <li>
+      Remettre le SSD dans le 600X et le démarrer.
+    </li>
+    <li>
+      Monter le CD avec <code>sudo mount /mnt/sr0</code>. On en aura besoin 
+      pendant l'installation Frugal.
+    </li>
+    <li>
+      Télécharger le script d'installation 
+      <code>tce-load -wi tc-install.tcz</code> et l'exécuter avec 
+      <code>sudo tc-install.sh</code> J'ai choisi l'installation par réseau, 
+      mais l'installation par CD devrait fonctionner aussi <code>N</code>.
+    </li>
+    <li>
+      Choisir <code>F</code> pour l'installation Frugal sur disque dur.
+    </li>
+    <li>
+      Choisir l'option <code>2</code> pour utiliser la partition existante et 
+      ÉVITER le disque en entier.
+    </li>
+    <li>
+      Installer le bootloader <code>y</code>
+    </li>
+    <li>
+      Choisir ext4 <code>4</code>. Même si la partition est déjà présente 
+      l'installeur demande de préciser le format pour continuer.
+    </li>
+    <li>
+      Lorsque l'installeur demande un chemin vers les extension, on peut entrer 
+      <code>/mnt/sr0</code>. Si on n'entre rien, l'installeur ne continuera pas.
+    </li>
+    <li>
+      Entrer les options de démarrage 
+      <code>vga=normal syslog showapps waitusb=5 tce=sda1</code>. On les 
+      changera plus tard pour avoir une meilleure résolution entre autre. 
+      <code>vga=normal</code> est le mode le plus compatible.
+    </li>
+      L'installeur va demander s'il est corect de détruire toutes les données 
+      sur <code>sda</code>. J'avais déjà fait une sauvegarde et la partition 
+      est vide de toute manière. Il faut accepter pour continuer.
+    </li>
+    <li>
+      Laisser l'installeur se compléter et ensuite éjecter le CD et redémarrer 
+      pour tester l'installation:
+      <code>
+<pre>
+sudo umount /mnt/sr0
+sudo eject /dev/sr0
+sudo reboot
+</pre>
+      </code>
+    </li>
+  </ol>
+  <h2>Sauvegarder le disque IDE</h2>
+  <p>
+    Si l'installation démarre, ça vaut la peine de faire une sauvegarde grâce 
+    au convertisseur IDE vers USB et en utilisant:<br>
+    <code>
+      sudo dd if=/dev/sdX of=core14.dd conv=sync,noerror bs=512M count=3 
+      status=progress
+    </code><br>
+    Il faut remplacer <code>sdX</code> par la bonne lettre pour le disque une 
+    fois connecté à un autre ordinateur. Il est possible de trouver la lettre 
+    du disque avec <code>sudo fdisk -l</code>. Le <code>count=3</code> indique 
+    à <code>dd</code> d'arrêter la lecture du disque après 3 fois la taille de 
+    bloc. On spécifie <code>bs=512M</code> pour avoir une taille de bloc de 512 
+    Mo pour pouvoir se retrouver avec une copie de sauvegarde d'une taille de 
+    1,5 Go. C'est assez pour s'assurer de copier le premier 1 Go du disque qui 
+    contient l'entièreté de la table de partition ainsi que la partition de 1 
+    Go où Core 14 est installé
+  </p>
+  <h2>Connecter le ThinkPad 560Z à un réseau IP</h2>
+  <p>
+    On peut maintenant passer au ThinkPad 560Z. Il faut mettre le disque IDE 
+    dans le 560Z et puis l'allumer. Il devrait démarrer comme si c'était le 
+    600X. On peut aussi connecter l'adapteur USB vers Ethernet pour se 
+    connecter à un réseau TCP/IP filaire moderne! On peut vérifier que 
+    l'adresse IP est là avec <code>sudo ifconfig eth0</code>.
+  </p>
+  <p>
+    Pour une raison inconnue, le 560Z ne trouve pas toujours son adresse IP 
+    après le redémarrage. Dans ce cas, on peut utiliser des commandes pour 
+    configurer manuellement le réseau lorsqu'on connaît les adresses IP qui y 
+    sont valides:
+    <code>
+<pre>
+sudo ifconfig eth0 192.168.0.180
+sudo route add default gw 192.168.0.1
+sudo cat /etc/resolv.conf
+sudo echo "nameserver 1.1.1.1" > /etc/resolv.conf
+</pre>
+    </code>
+    Il faut ajuster l'adresse IP à son propre réseau. <code>ifconfig</code> 
+    configure l'adresse IP du portable, <code>route</code> ajoute le gateway 
+    par défaut qui est typiquement le routeur quand on est à la maison. 
+    <code>cat /etc/resolv.conf</code> montre les serveur de noms (DNS servers) 
+    qui permettent de traduire un nom d'hôte vers une adresse IP. 1.1.1.1 est 
+    le serveur de noms de cloudflare. Il devrait être possible d'ajouter 
+    jusqu'à 3 serveurs dans le fichier.
+  </p>
+  <h2>Ajouter une partition d'échange et modifier la résolution</h2>
+  <p>
+    À ce point-ci, j'ai éteint le 560Z et j'ai modifié les partitions avec 
+    <code>gparted</code> dans Debian pour atteindre cette configuration:
+  </p>
+  <ol type="1">
+    <li>
+      Une partition primaire de 1 Go formattée ext4 pour démarrer Core Linux. 
+      <code>UUID="d39a00cb-d63f-470e-8c46-0bdbd1db2d6f"</code>
+    </li>
+    <li>
+      Une 2e partition primaire d'environ 495 Go formattée ext4 pour tous mes 
+      fichiers. <code>UUID="3541ff21-9683-4df0-9ecd-a5a3fce0014c"</code>
+    </li>
+    <li>
+      Une dernière partition primaire de 3 Go pour servir de partition 
+      d'échange (swap partition). 
+      <code>UUID="a53d3aa0-1607-44a2-8c43-bf71d35edf59"</code>
+    </li>
+  </ol>
+  <p>
+    On peut ajuster la résolution à <code>vga=788</code>. Il faut monter 
+    <code>sudo mount /dev/sda1</code> pour pouvoir accéder au fichier 
+    <code>extlinux.conf</code>. On doit 
+    <code>cd /mnt/sda1/tce/boot/extlinux/</code> et 
+    <code>sudo vi extlinux.conf</code>.
+  </p>
+  <p>
+    Donc, pour accéder au fichier:
+    <code>
+<pre>
+sudo mount /dev/sda1
+cd /mnt/sda1/tce/boot/extlinux/
+vi extlinux.conf
+</pre>
+    </code>
+    et le résultat que l'on veut:
+    <code>
+<pre>
+DEFAULT core 
+LABEL core 
+KERNEL /tce/boot/vmlinuz 
+INITRD /tce/boot/core.gz
+APPEND vga=788 syslog showapps tce=UUID="3541ff21-9683-4df0-9ecd-a5a3fce0014c" home=UUID="3541ff21-9683-4df0-9ecd-a5a3fce0014c" opt=UUID="3541ff21-9683-4df0-9ecd-a5a3fce0014c" nozswap lang=fr_CA.UTF-8
+</pre>
+    </code>
+    Le <code>home=</code>, le <code>opt=</code> et le <code>nozswap</code> 
+    permettent de sauver de la RAM en ne chargeant pas en mémoire vive les 
+    dossiers <code>home</code> et <code>opt</code>. Le code 
+    <code>lang=fr_CA.UTF-8</code> est expliqué plus tard dans la section où 
+    je décris <code>tce-load -wi getlocale.tcz</code>.
+  </p>
+  <p>
+    J'ai testé et découvert que je n'avais pas besoin de 
+    <code>waitusb=10</code> et je l'ai retiré. J'ai pensé qu'en l'augmentant 
+    cela aiderait le 560Z à auto-détecter son réseau, mais pas du tout. J'ai 
+    aussi retiré 
+    <code>waitusb=10:UUID="d39a00cb-d63f-470e-8c46-0bdbd1db2d6f"</code> parce 
+    que ma partition est sur un disque IDE, par sur une clé USB.
+  </p>
+  <p>
+    Il est intéressant de noter que lorsque je remets le disque dans le 600X, 
+    que je l'allume, que je l'éteint et que je le remet dans le 560Z, le réseau 
+    se remet à être auto-détecté. Je ne sais pas exactement pourquoi, mais 
+    c'est utile.
+  </p>
+  <p>
+    Si vous êtes curieux de voir les espaces d'échange mémoire utilisés: 
+    <code>cat /proc/meminfo</code> et <code>cat /proc/swaps</code>
+  </p>
+  <h2>Accéder à des pages web avec <code>curl</code></h2>
+  <p>
+    Une manière simple d'accéder à des pages web est la commande 
+    <code>curl</code>. On peut l'obtenir en tapant 
+    <code>tce-load -wi curl.tcz</code>. Installer cette extension installe
+    aussi <code>ca-certificates.tcz</code> et <code>openssl-1.1.1.tcz</code>.
+    C'est pour la prise en charge de TLS/HTTPS. On peut ensuite entrer la
+    commande <code>curl google.com/</code> et du code html provenant du site
+    s'affichera au terminal. La commande envoie en fait un 
+    <code>HTTP GET</code> au site. C'est ce que les navigateurs font au tout
+    début de l'accès à un site web. On peut consulter le manuel pour voir qu'il 
+    est possible de faire des <code>HTTP POST</code> et de passer un corps avec 
+    des données supplémentaires à la requête.
+  </p>
+  <h2>Configurer la langue et activer le support UTF-8</h2>
+  <p>
+    Par défaut, le terminal de Core n'a aucune langue et utilise ANSI 1968. Si 
+    on veut travailler en français avec UTF-8, il faut configurer la
+    langue française. Si on veut utiliser des extensions comme 
+    <code>tmux</code>, il faut aussi prendre en charge UTF-8.
+  </p>
+  <p>
+    On peut installer <code>tmux</code> pour avoir plusieurs lignes de 
+    commandes à la fois. Il faut remettre le disque IDE dans le 600X pour
+    compléter la génération des fichiers de configuration de localisation.
+    Une fois dans le 600X, il faut entrer la commande
+    <code>tce-load -wi getlocale.tcz</code> puis 
+    <code>sudo getlocale.sh</code>. Dans mon cas, j'ai choisi français 
+    Canada : <code>fr_CA.UTF-8</code>. 
+  </p>
+  <p>
+    Une fois que la commande se complète, il faut modifier
+    <code>extlinux.conf</code> pour ajouter le drapeau de démarrage 
+    <code>lang=fr_CA.UTF-8</code>.
+  </p>
+  <h2>Plusieurs terminaux avec <code>tmux</code></h2>
+  <p>
+    Une fois que le support UTF-8 est activé, on peut installer 
+    <code>tmux</code> avec <code>tce-load -wi tmux.tcz</code>. Une fois dans
+    <code>tmux</code>, on peut diviser le terminal en deux en appuyant sur
+    CTRL + B et puis " ou %. Voir le manuel de <code>tmux</code> pour plus
+    de détails.
+  </p>
+  <h2>Erreurs à éviter lors de la modification de <code>extlinux.conf</code></h2>
+  <p>
+    Ce ne sont que de toutes petites erreurs qui n'empêcheront pas le portable 
+    de démarrer. Voici un exemple de fichier extlinux.conf avec des erreurs!
+  </p>
+  <h3>Quelques modifications erronées du fichier <code>extlinux.conf</code></h3>
+  <p>
+    Voici un exemple de fichier <code>extlinux.conf</code> :
+    <code>
+<pre>
+UI vesamenu.c32
+MENU TITLE Tiny Core Bootloader 
+TIMEOUT 1
+
+DEFAULT core
+LABEL core
+KERNEL /tce/boot/vmlinuz
+INITRD /tce/boot/core.gz
+APPEND vga=788 syslog showapps tce=UUID="3541ff21-9683-4df0-9ecd-a5a3fce0014c" swapfile=UUID="a53d3aa0-1607-44a2-8c43-bf71d35edf59"
+
+LABEL unknown
+MENU LABEL Unknown OS
+COM32 chain.c32
+APPEND boot 1
+    </code>
+</pre>
+    J'ai initialement changé ces lignes:
+    <ul>
+      <li>
+        <code>TIMEOUT 1</code>. La valeur initiale était 100 pour attendre 10 
+        secondes à l'écran de sélection du système d'exploitation. J'aurais pu 
+        effacer le bloc de code du début et de la fin et ne garder que le bloc 
+        du milieu à la place.
+      </li>
+      <li>
+        <code>APPEND vga=788 syslog showapps tce=UUID="3541ff21-9683-4df0-9ecd-a5a3fce0014c" swapfile=UUID="a53d3aa0-1607-44a2-8c43-bf71d35edf59"</code> 
+        qui avait l'air de ceci à l'origine 
+        <code>APPEND quiet vga=normal syslog showapps waitusb=5 tce=sda1 waitusb=5:UUID="d39a00cb-d63f-470e-8c46-0bdbd1db2d6f" tce=UUID="d39a00cb-d63f-470e-8c46-0bdbd1db2d6f"</code>. 
+        L'erreur d'avoir deux fois <code>tce=</code> était due à l'installation 
+        avec <code>tce-install.sh</code>. Ça ne cause pas de problème de 
+        démarrage bien sûr, mais il vaut mieux n'avoir qu'une occurence.
+      </li>
+      <li>
+        J'ai ajouté inutilement 
+        <code>swapfile=UUID="a53d3aa0-1607-44a2-8c43-bf71d35edf59"</code>. Les 
+        fichiers d'échange sont différents des partitions d'échange. TC trouve 
+        automatiquement les partitions d'échanges. Les partitions d'échanges 
+        sont plus rapides que les fichiers d'échange.
+      </li>
+    </ul>
+  </p>
+  <h3>Erreurs avec <code>sudo getlocale.sh</code></h3>
+  <p>
+    Après avoir installé avec <code>tce-load -wi getlocale.tcz</code>, on peut 
+    exécuter <code>sudo getlocale.sh</code>. S'il manque de mémoire vive, comme 
+    sur le 560Z avec 64 Mo de RAM, on peut se retrouver avec ces messages au
+    terminal:
+    <code>
+<pre>
+cp: can't stat '/tmp/mylocale.tcz': No such file or directory
+md5sum: can't open 'mylocale.tcz': No such file or directory
+Done. The extension is at /mnt/sda2/tce/optional/mylocale.tcz and in onboot.lst
+du: /mnt/sha2/tce/optional/mylocale.tcz: No such file or directory
+sh: bad number
+Reboot with lang=xyz (for example lang=fr_CA.UTF-8) to start using this.
+Press enter to quit.
+</pre>
+    </code>
+    J'ai trouvé que <code>/mnt/sha2/tce/optional/mylocale.tcz</code> 
+    n'existait pas alors qu'il aurait dû. Je pense qu'avec 64 Mo de RAM et même 
+    si j'ai une partition d'échange, il y a peut-être un cas où il faut charger 
+    plus que ce qui reste comme mémoire vive de libre et qu'on entre dans une 
+    situation où on est continuellement en train d'échanger de la mémoire entre 
+    la mémoire vive et la partition d'échange ce qui fait échouer le script de 
+    cette manière inattendue. En remettant le disque IDE dans mon 600X qui a 
+    512 Mo de RAM, tout s'est bien passé. J'ai remis le disque IDE dans le 560Z 
+    qui s'est démarré en français avec UTF-8.
+  </p>
+  <h2>Remerciements!</h2>
+  <p>
+    Merci à
+    <ul>
+      <li>
+        curaga pour <code>getlocale.tcz</code> et à juanito, cheslavic et 
+        Nicholas Marriott pour <code>tmux.tcz</code>
+      </li>
+      <li>
+        <a href="https://mivilisnet.wordpress.com/2016/05/18/how-to-install-a-microcore-version-of-the-tiny-core-linux/">
+          cette publication de 2016 qui m'a été utile pour trouver mon chemin 
+        </a>
+      </li>
+      <li>
+        toute l'équipe de TinyCoreLinux qui maintient les images de du système 
+        d'exploitation, le site, le forum et le répertoire des extensions.
+      </li>
+      <li>
+        <a href="https://www.cyberciti.biz/faq/howto-linux-bsd-unix-set-dns-nameserver/">
+          Article sur la configuration des serveurs DNS sous Linux
+        </a>
+      </li>
+      <li>
+        <a href="http://tinycorelinux.net/book.html">
+          Le Core Book avec tous les détails sur les fichiers et commandes 
+          importantes de TC
+        </a> 
+      </li>
+      <li>
+        <a href="https://unix.stackexchange.com/questions/23072/how-can-i-check-if-swap-is-active-from-the-command-line">
+          Article avec commandes pour voir les échanges mémoire
+        </a>
+      </li>
+      <li>
+        <a href="http://forum.tinycorelinux.net/index.php/topic,23825.0.html">ce post</a>
+        et
+        <a href="http://tinycorelinux.net/14.x/x86/tcz/getlocale.tcz.info">
+          la page d'information de l'extension <code>getlocale.tcz</code>
+        </a>
+      </li>
+    </ul>
+  </p>
+</body>
+
+</html>

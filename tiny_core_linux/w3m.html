@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>w3m</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Cos'è <code>w3m</code>?</h1>
+  <p>
+    <code>w3m</code> è un commando che permette di aprire pagine web nel terminale. Si installa 
+    con <code>tce-load -wi w3m.tcz</code>.
+  </p>
+  <p>
+    Ho avuto questo errore la prima volta che l'ho usato in <code>tmux</code> :<br>
+    <code>can't find termcap entry</code><br>
+    La soluzione è di uscire da <code>tmux</code> e di guardare qual'è il valore di <code>$TERM</code> 
+    per poi configurarlo in <code>tmux.con</code>
+<pre>
+<code>
+echo $TERM
+linux
+vi ~/.tmux.conf
+set -g default-terminal "linux"
+tmux
+w3m duckduckgo.com
+</code>
+</pre>
+  </p>
+  <p>
+    Altri siti che ho trovato interessante mentre cercavo una soluzione :<br>
+    <a href="https://forum.slitaz.org/topic/tmux-terminal-error-with-mc-and-w3m">
+      I solved it by setting screen-256color instead of tmux-256color in .tmux.conf.
+    </a><br>
+    <a href="https://askubuntu.com/questions/192401/where-is-the-default-tmux-conf-file-located">
+      <code>tmux show -g | cat > ~/.tmux.conf</code> per vedere i parametri attuali usati da 
+      <code>tmux</code>
+    </a>
+  </p>
+</body>
+
+</html>

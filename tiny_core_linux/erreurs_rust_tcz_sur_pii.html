@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Erreurs de rust.tcz sur PII</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Les erreurs de <code>rust.tcz</code> sur un Pentium II</h1>
+  <h2>Introduction</h2>
+  <p>
+    Cette page fait suite à 
+    <a href="./debut_a_tmux.html">
+      Du début jusqu'à <code>tmux</code>
+    </a>.
+    Les portables que j'utilise sont le IBM ThinkPad 560Z Pentium II d'octobre 
+    1998 et le IBM ThinkPad 600X Pentium III produit en avril 2000. J'utilise
+    Core Linux 14 uniquement en terminal.
+  </p>
+  <p>
+    J'aime 
+    <a href="https://www.rust-lang.org/">
+      le language de programmation <code>rust</code>
+    </a>. Il y a une extension <code>rust.tcz</code> dans le répertoire de TCL
+    14, mais il ne génère que des erreurs sur un Pentium II.
+  </p>
+  <p>
+    Il n'est pas non plus possible d'utiliser le script d'installation officiel 
+    de <code>rust</code>.
+  </p>
+  <p>
+    Dans les deux cas, j'ai obtenus plusieurs erreurs comme avec la commande 
+    <code>rustc --version</code> qui
+    donne : 
+    <code>
+<pre>
+rustc[3007] trap invalid opcode ip:aff76daa sp:bfe0c170 error:0 in libllvm-13.so[aff30000+1a07000]
+Illegal instruction
+</pre>
+    </code>
+    Ceci est dû à <code>rustc</code> et/ou <code>libllvm</code> qui essaie
+    d'exécuter des codes d'opération qui ne sont pas pris en charge par le PII.
+  </p>
+  <h2>Déboguer <code>rust.tcz</code></h2>
+  <p>
+    Déboguer <code>rust.tcz</code> m'a permis de me diriger dans la bonne 
+    direction. Pour installer rust sous TCL, la manière officielle est de 
+    <code>tce-load -wi rust.tcz</code>
+  </p>
+  <p>
+    Ensuite, on peut <code>rustc --version</code>. La première fois, j'ai eu
+    l'erreur <code>error while loading shared libraries: libatomic.so.1: 
+    cannot open shared object file: No such file or directory</code><br>
+    J'ai appris qu'il me manquait des librairies. En cherchant sur le forum,
+    j'ai trouvé ceci «
+    <a href="http://forum.tinycorelinux.net/index.php/topic,22369.msg140079.html#msg140079">
+      I downloaded gcc_libs.tcz and added it to firefox dep file.  All is 
+      well now.  Works fine.
+    </a> ». Le forum indiquait que firefox aussi avait besoin de cette 
+    librairie et qu'il est possible de l'obtenir en 
+    <code>tce-load -wi gcc_libs.tcz</code><br>
+    <a href="http://tinycorelinux.net/14.x/x86/tcz/gcc_libs.tcz.info">
+      Plus d'informations sur <code>gcc_libs.tcz</code> ici.
+    </a>
+  </p>
+  <p>
+    On peut aussi voir avec 
+    <code>cat /mnt/sda2/tce/optional/rust.tcz.dep</code>
+    que les requis sont <code>llvm-lib.tcz</code>, <code>curl.tcz</code>, 
+    <code>libssh2.tcz</code>. J'en ai compris que <code>libatomic.so.1</code>
+    n'est inclus dans aucun de ces <code>.tcz</code>. Pour régler ceci,
+    <code>sudo vi /mnt/sda2/tce/optional/rust.tcz.dep</code> et ajouter
+    <code>gcc_libs.tcz</code> à la liste de requis.
+  </p>
+  <p>
+    C'est à ce point que je me suis retrouvé avec:
+    <code>
+<pre>
+rustc[3007] trap invalid opcode ip:aff76daa sp:bfe0c170 error:0 in libllvm-13.so[aff30000+1a07000]
+Illegal instruction
+</pre>
+    </code>
+  </p>
+  <h2>La solution</h2>
+  <p>
+    Un grand merci à Adam qui a créé ce site avec les instructions à suivre
+    sur Gentoo Linux 
+    <a href="https://ww1.thecodecache.net/projects/p2-rust/">
+      Building Rust for a Pentium 2
+    </a>
+  </p>
+</body>
+
+</html>

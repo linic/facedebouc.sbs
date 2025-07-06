@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>rust 1.75.0</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1><code>rust</code> 1.75.0</h1>
+  <h2>Version compilées</h2>
+  <p>
+  Pour des versions compilées, des outils pour compiler rust et plus d'explications à jour, voir :<br>
+  <a href="https://github.com/linic/rust-i586">github.com/linic/rust-i586</a><br>
+  Le reste de cette page est plutôt historique et détaille comment la première version a été
+  compilée manuellement.
+  </p>
+  <h2>Historique</h2>
+  <p>
+  Cette page fait suite à <a href="./rust_sur_pii.html">rust sur Pentium II</a>. J'avais compilé 
+  la toolchain pour rust 1.71.1 à l'époque. La version 1.75.0 est maintenant disponible. 
+  Il est possible de la télécharger d'ici en faisant 
+  <code>wget https://facedebouc.sbs/rust/rust-1.75.0-dev-i586-unknown-linux-gnu.tar.gz</code> 
+  et il est possible de télécharger son sha512 avec 
+  <code>wget https://facedebouc.sbs/rust/rust-1.75.0-dev-i586-unknown-linux-gnu.tar.gz.sha512sum</code> 
+  Il est aussi possible de télécharger le fichier <code>config.toml</code> que j'ai utilisé pour 
+  compilé le toolchain avec 
+  <code>wget https://facedebouc.sbs/rust/rust-1.75.0-dev-i586-unknown-linux-gnu.tar.gz.config.toml</code><br>
+  Pour l'utiliser, il faut le renommer à <code>config.toml</code>
+  </p>
+  <p>
+  Je suis reparti de la branche stable du répertoire git de rust et j'ai fait un 
+  <code>git pull</code><br>
+  J'ai eu des problèmes de merge pour une raison quelconque. Je m'en suis sorti avec 
+  <code>git reset --hard HEAD</code> et <code>git clean -f</code><br>
+  Ensuite, j'avais un <code>git submodule updated --init --recursive</code> à faire et j'ai suivi
+  le reste des instructions comme la dernière fois.
+  </p>
+  <p>
+  J'étais sous Debian 11. J'avais <code>cmake 3.18</code>. Le build a échoué la première fois 
+  parce qu'il faut au moins <code>cmake 3.20</code> ou plus récent. J'ai 
+  <a href="https://github.com/Kitware/CMake/releases/download/v3.28.1/cmake-3.28.1.tar.gz">
+    obtenu le 3.28.1 d'ici
+  </a>. Il faut faire attention de bien choisir le <code>cmake-X.YZ.A.tar.gz</code> comme le note
+  <a href="https://stackoverflow.com/questions/49859457/how-to-reinstall-the-latest-cmake-version">
+    How to reinstall the latest cmake version?
+  </a>.
+  Ensuite, simplement
+  <xmp>
+tar zxvf cmake-3.28.1.tar.gz
+cd cmake-3.28.1
+sudo ./bootstrap
+sudo make
+sudo make install
+cmake  --version
+  </xmp>
+  et puis on peut relancer la compilation qui devrait se terminer avec succès.
+  </p>
+  <h1>Installer dans <code>linichotmailca/tcl-core-x86</code></h1>
+  <p>
+  En exécutant l'image <code>linichotmailca/tcl-core-x86</code> en mode interactif avec
+<xmp>
+sudo docker pull linichotmailca/tcl-core-x86:14.x-x86
+sudo docker image list
+sudo docker run --name tcl-core-test --interactive /bin/sh <remplacer-avec-id-image>
+</xmp>
+  on peut utiliser la commande 
+  <code>sudo docker cp rust-1.75.0-dev-i586-unknown-linux-gnu.tar.gz tcl-core-test:/home/tc</code> 
+  pour copier le fichier compressé dans le conteneur. Ensuite, on peut 
+<xmp>
+sudo docker exec -it tcl-core-test sh
+cd /home/tc
+tar -xf rust-1.75.0-dev-i586-unknown-linux-gnu.tar.gz
+mkdir rust-1.75.0-i586
+mkdir rust-1.75.0-i586/etc
+sudo sh ./install.sh --verbose --destdir=/home/tc/rust-1.75.0-i586 --sysconfdir=/home/tc/rust-1.75.0-i586/etc
+</xmp>
+  Si tout se passe bien, le résulat en console devrait être 
+<xmp>
+install:
+install: validating arguments
+install:
+install: verifying destination is writable
+install: verifying destination is not the same as source
+install: creating uninstall script at /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/uninstall.sh
+install: installing component 'rustc'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/rust-gdb
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/rust-gdbgui
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/rust-lldb
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/rustc
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/rustdoc
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libcstr-ba50fc7242c0078d.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libdarling_macro-ac34caeb3af6bdf1.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libderivative-633fe43b9b843e30.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libderive_more-20ddcdc789ed322b.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libderive_setters-6174b278e76ebeb3.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libdisplaydoc-65eef1d4edab898d.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libicu_provider_macros-afe10bfb1d702233.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libproc_macro_hack-117a21286baef9af.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/librustc_driver-77d775a8c6d7223f.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/librustc_fluent_macro-124f80bfe15ecd72.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/librustc_macros-c383a88f13a05da9.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libserde_derive-d3fa924a1655e876.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libstd-cb9129474ab45cff.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libtest-8c3025347e7a4b65.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libthiserror_core_impl-d058c72d352ecd46.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libthiserror_impl-60695b8d92ba32dd.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libtracing_attributes-d5db7d8cb00a9c7f.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libunic_langid_macros_impl-ea3e07c2dd74b0fc.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libyoke_derive-9e5fc9d4edd60ac7.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libzerofrom_derive-7f7dc189e1cfd7f7.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/libzerovec_derive-a33b5aa1b596520f.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/etc/gdb_load_rust_pretty_printers.py
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/etc/gdb_lookup.py
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/etc/gdb_providers.py
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/etc/lldb_commands
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/etc/lldb_lookup.py
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/etc/lldb_providers.py
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/etc/rust_types.py
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/libexec/rust-analyzer-proc-macro-srv
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust/COPYRIGHT
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust/LICENSE-APACHE
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust/LICENSE-MIT
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust/README.md
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/rustc.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/rustdoc.1
+install: installing component 'rust-std-i586-unknown-linux-gnu'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libaddr2line-8b1d5104388cbc0b.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libadler-8c5553842e0e0746.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/liballoc-018cdba9d5d5e9d0.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libcfg_if-374a482cae8269fd.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libcompiler_builtins-1f384bf80c861943.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libcore-acaf782a3b57721f.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libgetopts-b2566ebba3aae369.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libgimli-b9c72474ce7f5164.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libhashbrown-ff16a8590ec693b1.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/liblibc-f664b0eb146913fe.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libmemchr-3c85d0aa80ce8507.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libminiz_oxide-d92687961e52538a.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libobject-745e961c920afc86.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libpanic_abort-5ac51bcc487f3cb9.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libpanic_unwind-6e2b371c2005fbc5.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libproc_macro-106f4f264890a533.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/librustc_demangle-59ba904732c7b448.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/librustc_std_workspace_alloc-aff597c3033a37c5.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/librustc_std_workspace_core-b4d25204710c6acf.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/librustc_std_workspace_std-c39c14801deae2cc.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libstd-cb9129474ab45cff.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libstd-cb9129474ab45cff.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libstd_detect-5b6b4bbef167e609.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libsysroot-e02976b17f2c36b1.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libtest-8c3025347e7a4b65.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libtest-8c3025347e7a4b65.so
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libunicode_width-9c05848bc64c004c.rlib
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/lib/libunwind-a8e78df3c6fb2612.rlib
+install: installing component 'rust-docs'
+install: copying directory /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust/html
+install: installing component 'rust-docs-json-preview'
+install: copying directory /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust/json
+install: installing component 'rust-demangler-preview'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/rust-demangler
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust-demangler/LICENSE-APACHE
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust-demangler/LICENSE-MIT
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust-demangler/README.md
+install: installing component 'cargo'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/cargo
+install: copying file /home/tc/rust-1.75.0-i586/etc/bash_completion.d/cargo
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/cargo/LICENSE-APACHE
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/cargo/LICENSE-MIT
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/cargo/LICENSE-THIRD-PARTY
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/cargo/README.md
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-add.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-bench.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-build.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-check.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-clean.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-doc.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-fetch.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-fix.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-generate-lockfile.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-help.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-init.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-install.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-locate-project.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-login.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-logout.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-metadata.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-new.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-owner.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-package.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-pkgid.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-publish.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-remove.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-report.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-run.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-rustc.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-rustdoc.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-search.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-test.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-tree.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-uninstall.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-update.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-vendor.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-verify-project.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-version.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo-yank.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/man/man1/cargo.1
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/zsh/site-functions/_cargo
+install: installing component 'rustfmt-preview'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/cargo-fmt
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/rustfmt
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rustfmt/LICENSE-APACHE
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rustfmt/LICENSE-MIT
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rustfmt/README.md
+install: installing component 'rls-preview'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/rls
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rls/LICENSE-APACHE
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rls/LICENSE-MIT
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rls/README.md
+install: installing component 'rust-analyzer-preview'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/rust-analyzer
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust-analyzer/LICENSE-APACHE
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust-analyzer/LICENSE-MIT
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/rust-analyzer/README.md
+install: installing component 'llvm-tools-preview'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llc
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-ar
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-as
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-cov
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-dis
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-nm
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-objcopy
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-objdump
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-profdata
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-readobj
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-size
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/llvm-strip
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/bin/opt
+install: installing component 'clippy-preview'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/cargo-clippy
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/bin/clippy-driver
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/clippy/LICENSE-APACHE
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/clippy/LICENSE-MIT
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/share/doc/clippy/README.md
+install: installing component 'rust-analysis-i586-unknown-linux-gnu'
+install: copying file /home/tc/rust-1.75.0-i586/usr/local/lib/rustlib/i586-unknown-linux-gnu/analysis/removed.json
+install: running ldconfig
+
+    rust installed.
+
+~/rust-1.75.0-dev-i586-unknown-linux-gnu $
+</xmp>
+  Ensuite, on peut générer le tcz avec <code>mksquashfs rust-1.75.0-i586 rust-1.75.0-i586.tcz</code> 
+  qui devrait donner le résultat suivant :
+<xmp>
+Parallel mksquashfs: Using 8 processors
+Creating 4.0 filesystem on rust-1.75.0-i586.tcz, block size 4096.
+[=================================================================================================================================================\] 362600/362600 100%
+
+Exportable Squashfs 4.0 filesystem, gzip compressed, data block size 4096
+        compressed data, compressed metadata, compressed fragments,
+        no xattrs, compressed ids
+        duplicates are removed
+Filesystem size 451878.21 Kbytes (441.29 Mbytes)
+        33.46% of uncompressed filesystem size (1350590.12 Kbytes)
+Inode table size 918527 bytes (897.00 Kbytes)
+        35.38% of uncompressed inode table size (2596519 bytes)
+Directory table size 323202 bytes (315.63 Kbytes)
+        27.90% of uncompressed directory table size (1158411 bytes)
+Number of duplicate files found 895
+Number of inodes 37077
+Number of files 36016
+Number of fragments 1422
+Number of symbolic links 0
+Number of device nodes 0
+Number of fifo nodes 0
+Number of socket nodes 0
+Number of directories 1061
+Number of hard-links 0
+Number of ids (unique uids + gids) 3
+Number of uids 2
+        root (0)
+        tc (1001)
+Number of gids 1
+        staff (50)
+</xmp>
+  Ensuite, on peut charger le tcz avec <code>tce-load -i rust-1.75.0-i586.tcz</code> dont le 
+  résultat devrait être <code>rust-1.75.0-i586.tcz: OK</code><br>
+  </p>
+  <p>
+  Quelques tests simples peuvent révéler des erreurs:
+<xmp>
+~ $ rustc --version
+rustc 1.75.0-dev
+~ $ cargo --version
+cargo: error while loading shared libraries: libssl.so.1.1: cannot open shared object file: No such file or directory
+</xmp>
+  </p>
+  <p>
+  Une solution est de compiler sa propre librairie. Ce site est un bon point de départ:
+  <a href="https://stackoverflow.com/questions/72133316/libssl-so-1-1-cannot-open-shared-object-file-no-such-file-or-directory">
+    libssl-so-1-1-cannot-open-shared-object-file-no-such-file-or-directory
+  </a>
+  </p>
+  <p>
+  En résumé, pour générer <code>libssl.so.1.1</code> et <code>libcrypto.so.1.1</code> 
+  (j'ai aussi eu l'erreur 
+  <code>cargo: error while loading shared libraries: libcrypto.so.1.1: cannot open shared object file: No such file or directory</code>):
+<xmp>
+wget https://www.openssl.org/source/openssl-1.1.1o.tar.gz
+tar -zxvf openssl-1.1.1o.tar.gz
+cd openssl-1.1.1o
+export CFLAGS="-march=pentium"
+export CXXFLAGS="-march=pentium"
+./Configure linux-x86
+make && make test
+# Même si des tests échouent... on peut essayer quand même :)
+sudo docker cp libssl.so.1.1 tcl-core-test:/usr/lib/
+sudo docker cp libcrypto.so.1.1 tcl-core-test:/usr/lib/
+# Et ensuite avc la ligne de commande du conteneur tcl-core-test...
+cargo --version
+cargo 1.75.0-dev (1d8b05cdd 2023-11-20)
+~ $ cargo new test-app-1
+     Created binary (application) `test-app-1` package
+~ $ cd test-app-1/
+~/test-app-1 $ cargo run
+   Compiling test-app-1 v0.1.0 (/home/tc/test-app-1)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.16s
+     Running `target/debug/test-app-1`
+Hello, world!
+</xmp>
+  </p>
+  <p>
+  Pendant le débogage, j'ai aussi installé les tczs suivants:
+<xmp>
+tce-load -wi curl.tcz
+tce-load -wi gcc.tcz
+tce-load -wi glibc_base-dev.tcz
+tce-load -wi libssh2.tcz
+</xmp>
+  je devrai revérifier si j'en ai vraiment besoin...
+  </p>
+</body>
+
+</html>
+

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>tcl-core-rust-i586</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>tcl-core-rust-i586</h1>
+  <p>
+    Ceci fait suite à <a href="./docker-tcl-core-x86.html">docker-tcl-core-x86</a>  et à  
+    <a href="./rust_1.75.0.html">rust 1.75.0 sur PII</a>.
+  </p>
+  <p>
+  Il est possible de générer une image docker avec TCL Core et rust compilé pour PII à partir du 
+  code dans les répertoires suivants et aussi de télécharger des versions déjà compilées dans la
+  section <code>releases</code> de ces répertoires git :
+  <a href="https://github.com/linic/rust-i586">linic/rust-i586 sur github</a><br>
+  <a href="https://github.com/linic/openssl-i586">linic/openssl-i586 sur github</a><br>
+  <a href="https://github.com/linic/tcl-core-rust-i586.git">linic/tcl-core-rust-i586 sur github</a><br>
+  </p>
+  <p>
+    Ça permet de tester rapidement qu'une nouvelle version de rust avant de l'installer réellement 
+    sur un vrai PII peu puissant ce qui prend plus de temps.
+  </p>
+  <h1>Historique</h1>
+  <h2>1.79.0</h2>
+  <p>À la fin du build, on a:
+  <xmp>
+#20 6530.5 cargo:root=/rust/build/i586-unknown-linux-gnu/lld                                                                                                   [12/1918]
+#20 6530.5      finished in 119.810 seconds                                                                                                                             
+#20 6530.6 Dist rust-dev-nightly-i586-unknown-linux-gnu                                                                                                                 
+#20 6706.1      finished in 175.501 seconds                                                                                                                             
+#20 6706.1 Dist extended stage1 (i586-unknown-linux-gnu)                                                                                                                
+#20 6706.1 Dist rust-nightly-i586-unknown-linux-gnu                                                                                                                     
+#20 6809.6      finished in 103.465 seconds                                                                                                                             
+#20 7079.2 Dist rustc-nightly-src                                                                                                                                       
+#20 7242.0      finished in 162.810 seconds                                                                                                                             
+#20 7242.0 There have been changes to x.py since you last updated:                                                                                                      
+#20 7242.0   [INFO] New option `target.<triple>.codegen-backends` added to config.toml.                                                                                 
+#20 7242.0     - PR Link https://github.com/rust-lang/rust/pull/120348                                                                                                  
+#20 7242.0   [INFO] A new `rust.frame-pointers` option has been introduced and made the default in the compiler and codegen profiles.                                   
+#20 7242.0     - PR Link https://github.com/rust-lang/rust/pull/121203
+#20 7242.0   [WARNING] The "codegen"/"llvm" profile has been removed and replaced with "compiler", use it instead for the same behavior.
+#20 7242.0     - PR Link https://github.com/rust-lang/rust/pull/121278
+#20 7242.0   [INFO] `x install` now skips providing tarball sources (under 'build/dist' path) to speed up the installation process.
+#20 7242.0     - PR Link https://github.com/rust-lang/rust/pull/118724
+#20 7242.0   [INFO] A new `boostrap-cache-path` option has been introduced which can be utilized to modify the cache path for bootstrap.
+#20 7242.0     - PR Link https://github.com/rust-lang/rust/pull/121976
+#20 7242.0   [INFO] a new `target.*.runner` option is available to specify a wrapper executable required to run tests for a target
+#20 7242.0     - PR Link https://github.com/rust-lang/rust/pull/122108
+#20 7242.0   [INFO] New option `rust.llvm-bitcode-linker` that will build the llvm-bitcode-linker.
+#20 7242.0     - PR Link https://github.com/rust-lang/rust/pull/117458
+#20 7242.0   [WARNING] `rust.split-debuginfo` has been moved to `target.<triple>.split-debuginfo` and its default value is determined for each target individually.
+#20 7242.0     - PR Link https://github.com/rust-lang/rust/pull/121754
+#20 7242.0   [WARNING] The deprecated field `changelog-seen` has been removed. Using that field in `config.toml` from now on will result in breakage.
+#20 7242.0     - PR Link https://github.com/rust-lang/rust/pull/123711
+#20 7242.0 NOTE: to silence this warning, update `config.toml` to use `change-id = 123711` instead
+#20 7242.0 NOTE: this message was printed twice to make it more likely to be seen
+#20 7242.0 Build completed successfully in 2:00:41
+  </xmp>
+</body>
+
+</html>
+

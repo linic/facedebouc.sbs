@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>gcc avec Core 14</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1><code>gcc</code> avec Core 14</h1>
+  <h2>Introduction</h2>
+  <p>
+    Cette page fait suite à 
+    <a href="./debut_a_tmux.html">
+      Du début jusqu'à <code>tmux</code>
+    </a>.
+    Les portables que j'utilise sont le IBM ThinkPad 560Z Pentium II d'octobre 
+    1998 et le IBM ThinkPad 600X Pentium III produit en avril 2000. J'utilise
+    Core Linux 14 uniquement en terminal.
+  </p>
+  <h2>Obtenir <code>gcc</code></h2>
+  <p>
+    Au terminal,
+    <code>
+<pre>
+tce-load -wi gcc.tcz
+gcc --version
+</pre>
+    </code>
+    La dernière commande devrait afficher une version et aucune erreur.
+  </p>
+  <h2>Tester la compilation</h2>
+  <p>
+    S'il manque des requis, il y aura des erreurs à la compilation. Par exemple,
+    avec
+    <code>
+<pre>
+sudo vi main.c
+int main(){
+    return 95;
+}
+</pre>
+    </code>
+    j'ai eu le résultat
+    <code>
+<pre>
+/user/local/bin/ld: cannot find Scrt1.o: No such file or directory
+/user/local/bin/ld: cannot find crti.o: No such file or directory
+collect2: error: ld returned 1 exit status
+</pre>
+    </code>
+  </p>
+  <p>
+    J'ai cherché à travers le forum de TCL et j'ai trouvé
+    <a href="http://forum.tinycorelinux.net/index.php/topic,22216.msg139089.html#msg139089">
+      un fil du forum qui parle de « g++ compilation error »
+    </a>
+    et j'ai continué avec
+    <code>
+<pre>
+tce-load -wi glibc_base-dev.tcz
+gcc main.c
+./a.out; echo $?
+</pre>
+    </code>
+    ce qui a affiché 95 à l'écran.
+  </p>
+  <p>
+    Un autre point est que j'avais déjà installé <code>gcc_libs.tcz</code> 
+    parce que j'avais installé une autre extension qui en avait besoin.
+    Si la compilation fonctionne, ce n'est peut-être pas nécessaire d'installer
+    celle-ci. Aussi, peut-être que ce requis est déjà dans le 
+    <code>gcc.tcz.dep</code><br>
+    Pour le vérifier, il faut entrer la commande 
+    <code>sudo vi /mnt/sda2/tce/optional/gcc.tcz.dep</code><br>
+    Il faut changer le <code>sda2</code> pour la partition où se trouve le
+    répertoire <code>tce</code>
+  </p>
+  <p>
+    Une fois que la compilation fonctionne, on peut aller plus loin et ajouter
+    un appel de fonction de la librairie standard <code>stdio.h</code>
+    <code>
+<pre>
+#include &lt;stdio.h&gt;
+
+int main(){
+    printf("Hello world!");
+    return 95;
+}
+</pre>
+    </code>
+  </p>
+  <h2>Remerciements!</h2>
+  <p>
+    Merci à
+    <ul>
+      <li>
+        Merci à juanito pour <code>gcc.tcz</code> et 
+        <code>glibc_base-dev.tcz</code>!<br>
+        <a href="http://tinycorelinux.net/14.x/x86/tcz/gcc.tcz.info">
+          Cliquer ici pour accéder à <code>gcc.tcz.info</code>
+        </a><br>
+        <a href="http://tinycorelinux.net/14.x/x86/tcz/glibc_base-dev.tcz.info">
+          Cliquer ici pour accéder à <code>glibc_base-dev.tcz.info</code>
+        </a>
+      </li>
+    </ul>
+  </p>
+</body>
+
+</html>

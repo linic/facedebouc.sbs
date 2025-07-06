@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>git</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Installer git</h1>
+  <p>
+    Cette page fait suite à 
+    <a href="./debut_a_tmux.html">
+      Du début jusqu'à <code>tmux</code>
+    </a>.
+  </p>
+  <p>
+    On peut installer <code>git</code> avec <code>tce-load -wi git.tcz</code>.
+    On peut s'assurer que l'extension a bien été installée en faisant
+    <code>
+<pre>
+cd /mnt/sda2/tce
+cat onboot.lst
+ls optional/
+</pre>
+    </code>
+    On devrait y voir <code>git.tcz</code>. Notez que <code>tce</code> est dans 
+    <code>sda2</code> pour moi. Selon l'ordinateur, il faudra adapter à la 
+    bonne partition.
+  </p>
+</body>
+
+</html>

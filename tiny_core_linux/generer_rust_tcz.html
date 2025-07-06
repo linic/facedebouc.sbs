@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Générer rust.tcz</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Générer son propre <code>rust.tcz</code></h1>
+  <h2>Version compilées</h2>
+  <p>
+  Si vous voulez vous sauver du temps, j'ai des versions compilées ici :<br>
+  <a href="https://github.com/linic/tcl-core-rust-i586/releases">github.com/linic/tcl-core-rust-i586/releases</a><br>
+  Le répertoire git duquel proviennent ces versions explique en détail comment elles sont compilées.
+  Les informations du répertoire git sont plus à jour que le reste des informations dans cette page.
+  </p>
+  <h2>Introduction</h2>
+  <p>
+    Cette page fait suite à 
+    <a href="./rust_sur_pii.html">
+      Du début jusqu'à <code>tmux</code>.
+    </a>
+    Mon IBM ThinkPad 560Z Pentium II n'a que 64 Mo de RAM et les instructions 
+    ici ne fonctionnent pas. Mon IBM ThinkPad 600X Pentium III a 512 Mo de RAM 
+    alors ça fonctionne.
+  </p>
+  <h2>Utiliser <code>mksquashfs</code></h2>
+  <p>
+    Pour se remémorer, les deux premières lignes montrent où <code>rust</code> 
+    avait été installé. Ensuite, les autres commandes génère un 
+    <code>.tcz</code> : 
+    <code>
+<pre>
+cd rust-1.71.1-dev-i586-unknown-linux-gnu
+sudo sh ./install.sh --verbose --destdir=/home/tc/rust-1.71.1-i586 --sysconfdir=/home/tc/rust-1.71.1-i586/etc
+tce-load -wi squashfs-tools.tcz
+mksquashfs rust-tcz rust-1.71.1-pii.tcz
+sudo cp -v rust-1.71.1-pii.tcz /mnt/sda2/tce/optional/
+sudo vi /mnt/sda2/tce/onboot.lst # et ajouter rust-1.71.1-pii.tcz
+sudo reboot
+</pre>
+    </code>
+  </p>
+  <h2>Utiliser <code>cargo</code></h2>
+  <p>
+    Après le redémarrage, il devrait être possible d'exécuter 
+    <code>
+<pre>
+rustc --version
+cargo --version
+cargo new hello-world
+cd hello-world
+cargo run
+</pre>
+    </code>
+  </p>
+  <p>
+    S'il y a une erreur indiquant que <code>cc</code> est manquant, on peut 
+    installer ceci :
+    <code>
+<pre>
+tce-load -wi gcc.tcz
+tce-load -wi glibc_base-dev.tcz
+</pre>
+    </code>
+    <code>rust</code> a besoin d'un linker C pour pouvoir fonctionner. 
+    J'ai compris en lisant 
+    <a href="http://forum.tinycorelinux.net/index.php/topic,22216.msg139089.html#msg139089">
+      piCore 9.x ARMv6 g++ compilation error
+    </a>
+    et
+    <a href="https://stackoverflow.com/questions/52445961/how-do-i-fix-the-rust-error-linker-cc-not-found-for-debian-on-windows-10">
+        How do I fix the Rust error "linker 'cc' not found" for Debian on Windows 10?
+      </a>
+  </p>
+  <h2>Remerciements!</h2>
+  <p>
+    Merci à
+    <ul>
+      <li>
+        <a href="http://tinycorelinux.net/book.html">
+          Merci pour les chapitres 14 et 15 du Core Book qui m'ont aidé à créer 
+          mon propre <code>rust-1.71.1-pii.tcz extension.</code>
+        </a>
+      </li>
+      <li>
+        Thanks to juanito for <code>gcc.tcz</code> (
+        <a href="http://tinycorelinux.net/14.x/x86/tcz/gcc.tcz.info">
+          gcc.tcz.info
+        </a>)
+        et pour <code>glibc_base-dev.tcz</code> (
+        <a href="http://tinycorelinux.net/14.x/x86/tcz/glibc_base-dev.tcz.info">
+          glibc_base-dev.tcz.info
+        </a>)
+      </li>
+    </ul>
+  </p>
+</body>
+
+</html>

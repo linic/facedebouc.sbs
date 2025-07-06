@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>rustlings_sur_PII</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1><code>rustlings</code> sur PII</h1>
+  <h2>Introduction</h2>
+  <p>
+    Cette page fait suite à 
+    <a href="./rust_sur_pii.html"><code>rust</code> sur PII</a> et à
+    <a href="./installer_git.html">installer <code>git</code></a>.
+    Les portables que j'utilise sont le IBM ThinkPad 560Z Pentium II d'octobre 
+    1998 et le IBM ThinkPad 600X Pentium III produit en avril 2000. J'utilise
+    Core Linux 14 uniquement en terminal.
+  </p>
+  <p>
+    <a href="https://github.com/rust-lang/rustlings">
+      Le projet d'apprentissage <code>rustlings</code>
+    </a> est un bon test pour voir jusqu'où on peut aller avec le 560Z. Après 
+    avoir généré un compilater compatible pour une processeur PII,
+    on peut installer <code>rustlings</code>. L'installation dure 5 heures.
+    Quelques notes :
+    <ul>
+      <li>
+        <code>exercises/intro/intro1.rs</code> prend environ 30 secondes à compiler.
+      </li>
+      <li>
+        <code>exercises/intro/intro2.rs</code> prend environ 40 secondes à compiler.
+      </li>
+    </ul>
+    Il faut donc être patient :)
+  </p>
+  <h2>Obtenir <code>rustlings</code></h2>
+  <p>
+    On peut télécharger le code source de <code>rustlings</code> avec 
+    <code>git</code>. Le projet se trouve à 
+    <a href="https://github.com/rust-lang/rustlings">
+      https://github.com/rust-lang/rustlings
+    </a>
+  </p>
+  <h2>Configurare i certificati TLS</h2>
+  <p>
+    Non lo so perché, ma TCL non si fide dei certificati TLS usati da i siti 
+    contattati da <code>cargo</code>. Per fidarsi di questi certificati :
+    <code>
+<pre>
+mkdir /home/tc/certificates
+cd /home/tc/certiticates
+openssl s_client -showcerts index.crates.io:443 2>&1 | sed --quiet '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > index.crates.io.all.crt
+sudo cp -v index.crates.io.all.crt /usr/local/share/ca-certificates/
+sudo update-ca-certificates
+export SSL_CERT_FILE=/usr/local/share/ca-certificates/index.crates.io.all.crt
+cd /home/tc/certificates
+openssl s_client -showcerts crates.io:443 2>&1 | sed --quiet '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > crates.io.all.crt
+cp index.crates.io.all.crt cargo.all.crt
+cat crates.io.all.crt >> cargo.all.crt
+export SSL_CERT_FILE=/home/tc/certificates/cargo.all.crt
+</pre>
+    </code>
+  </p>
+  <h2>Installare <code>rustlings</code></h2>
+  <p>
+    Per installare rustlings :
+    <code>
+<pre>
+tce-load -wi git.tcz
+git clone -b 5.5.1 --depth 1 https://github.com/rust-lang/rustlings
+cd rustlings
+cargo install --force --path .
+export PATH=/home/tc/.cargo/bin:$PATH
+rustlings
+</pre>
+    </code>
+  </p>
+  <h2>Il documento <code>.source</code></h2>
+  <p>
+    Per potere utilizzare <code>rustlings</code> dopo la reinizializzazione del 
+    computer, è possibile di creare un documento <code>.source</code> che 
+    contiene questo :
+    <code>
+<pre>
+export PATH=/home/tc/rust-1.71.1-i586/usr/local/bin:/home/tc/.cargo/bin:$PATH
+source ./add-rust-paths.source
+</pre>
+    </code>
+    Possiamo creare il documento con <code>vi add-rust-paths.source</code> 
+    Per utilizare il documento, fare <code>source add-rust-paths.source</code> 
+    al terminale.
+  </p>
+  <h2>Due terminali orizzontali</h2>
+  <p>
+    Per lavorare con <code>rustlings</code>, è meglio di usare due terminali 
+    diviso all'orizzontale con <code>tmux</code> usando <code>CTRL + B "</code><br> 
+    I miei due terminali sono al percorso <code>/home/tc/rustlings/exercises</code>
+  </p>
+  <h2>Ringraziamenti!</h2>
+  <p>
+    <ul>
+      <li>
+        <a href="https://www.misterpki.com/openssl-s-client/">
+          Grazie a misterpki.com per i commandi per generare un documento 
+          <code>.crt</code> con l'uscita del commando <code>openssl</code>
+        </a>
+      </li>
+      <li>
+        <a href="https://users.rust-lang.org/t/unable-to-update-my-cargo-package-ssl-error/5157/5">
+          Grazie a ansible su questo forum che mi ha dato l'idea di usare 
+          <code>SSL_CERT_FILE</code>
+        </a>
+      </li>
+      <li>
+        <a href="https://askubuntu.com/questions/935990/update-ca-certificates-0-added-0-removed-how-come">
+          Grazie a Jon Thanh Nhan che mi hanno rifrescato la memoria su come 
+          fidarsi di nuovi certificati con <code>update-ca-certificates</code>
+        </a>
+      </li>
+    </ul>
+  </p>
+</body>
+
+</html>

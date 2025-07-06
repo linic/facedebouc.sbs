@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>rust sur PII</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1><code>rust</code> sur PII</h1>
+  <h2>Version compilées de rust-i586.tcz</h2>
+  <p>
+  Si vous voulez vous sauver du temps, j'ai des versions compilées ici :<br>
+  <a href="https://github.com/linic/tcl-core-rust-i586/releases">github.com/linic/tcl-core-rust-i586/releases</a><br>
+  Le répertoire git duquel proviennent ces versions explique en détail comment elles sont compilées.
+  J'ai réussi à <code>tce-load -i rust-i586.tcz</code> sur mon 560z avec 64 MB de RAM, mais si
+  pour une raison ça ne fonctionne pas, il y a aussi les sources compilées à partir desquelles les
+  .tcz ont été générés ici :<br>
+  <a href="https://github.com/linic/rust-i586/releases">github.com/linic/rust-i586</a><br>
+  <a href="https://github.com/linic/openssl-i586/releases">github.com/linic/openssl-i586</a><br>
+  Pour utiliser les sources compilées, il faut installer rust directement dans un répertoire avec
+  <code>install.sh<code>. La méthode est détaillée plus loin dans cette page.
+  Les informations du répertoire git sont plus à jour que le reste des informations dans cette page.
+  </p>
+  <h2>Introduction</h2>
+  <p>
+    Cette page fait suite à 
+    <a href="./debut_a_tmux.html">
+      Du début jusqu'à <code>tmux</code>.
+    </a>
+    Les portables que j'utilise sont le IBM ThinkPad 560Z Pentium II d'octobre 
+    1998 et le IBM ThinkPad 600X Pentium III produit en avril 2000. J'utilise
+    Core Linux 14 uniquement en terminal.
+  </p>
+  <h2>Générer un compilateur</h2>
+  <p>
+    Il n'est pas possible d'utiliser le script d'installation officiel de 
+    <code>rust</code> ni de simplement installer l'extension officielle de
+    Tiny Core Linux <code>rust.tcz</code>. Dans les deux cas, j'ai obtenus
+    plusieurs erreurs. Voir 
+    <a href="./erreurs_rust_tcz_sur_pii.html">
+      les erreurs de <code>rust.tcz</code> sur un Pentium II
+    </a> 
+  </p>
+  <p>
+    La solution est de générer un compilateur <code>rust</code> qui ne contient
+    pas les opérations invalides.
+  </p>
+  <p>
+    Un grand merci à Adam qui a créé ce site avec les instructions à suivre
+    sur Gentoo Linux 
+    <a href="https://ww1.thecodecache.net/projects/p2-rust/">
+      Building Rust for a Pentium 2
+    </a>. 
+    Je me suis basé sur ses explications pour compiler mon propre compilateur
+    sur Debian.
+  </p>
+  <h2>Quelques considérattions</h2>
+  <p>
+    Il est possible que les instructions suivantes soient incomplètes. Mon 
+    Debian avait déjà plusieurs outils de développement. S'il vous manque 
+    des paquets ou des dépendances, il y aura fort probablement des erreurs 
+    au terminal. Cherchez internet et vous trouverez sûrement la solution :)
+  </p>
+  <h2>Configuration de l'environnement Debian</h2>
+  <p>
+    Ma configuration est un Debian 11 x64, avec un FX9590, un SSD de 2TB 
+    Samsung QVO, 32 Go de RAM. Plusieurs configurations fonctionneront. 
+    Il m'a fallu environ 1 heure 45 minutes pour générer le compilateur.
+  </p>
+  <p>
+    Il faut installer au moins ces paquets:
+    <code>
+<pre>
+sudo dpkg --add-architecture i386
+sudo apt-get update
+sudo apt-get install build-essential cmake gcc gcc-multilib g++ g++-multilib git lib32z1 zlib1g-dev zlib1g-dev:i386 libssl-dev libssl-dev:i386 openssl curl ninja-build python3
+</pre>
+    </code>
+  </p>
+  <p>
+    À noter, j'ai installé des dépendances deux fois. Par exemple, 
+    <code>zlib1g-dev zlib1g-dev:i386</code>. La première est la version x64, 
+    la seconde est la version i386. Quand j'avais seulement la version x64, 
+    la génération du compilateur <code>rust</code> échouait parce qu'elle 
+    searchait pour la version x86 qui était manquante. Le PII est un x86.
+  </p>
+  <p>
+    Il faut obtenir le code de <code>rust</code> avec 
+    <code>
+<pre>
+git clone https://github.com/rust-lang/rust
+cd rust
+git checkout stable
+git submodule update --init --recursive
+</pre>
+    </code>
+    La version <code>stable</code> quand j'ai exécuté ces commandes était 
+    1.71.1.
+  </p>
+  <p>
+    Il faut configurer les variables d'environnement suivantes:
+    <code>
+<pre>
+export CFLAGS="-march=pentium"
+export CXXFLAGS="-march=pentium"
+export RUST_BACKTRACE=full
+</pre>
+    </code>
+  </p>
+  <p>
+    Il faut éditer le fichier <code>config.toml</code> et démarrer la 
+    génération du compilateur.
+<code>
+<pre>
+./configure --set build.extended=true --set build.build=i686-unknown-linux-gnu --set build.host=i586-unknown-linux-gnu --set build.target=i586-unknown-linux-gnu --set llvm.cflags="-lz -fcf-protection=none" --set llvm.cxxflags="-lz -fcf-protection=none" --set llvm.ldflags="-lz -fcf-protection=none" --set llvm.targets=X86 --set llvm.download-ci-llvm=false
+./x.py check
+PKG_CONFIG_ALLOW_CROSS=1 ./x.py dist -j 8 2>&1 | tee date-time-rust-i586-build-log.txt
+</pre>
+</code>
+    La commande<code>./x.py check</code> est optionnelle, mais elle 
+    peut fournir des informations à propos de dépendances possibles 
+    avant de démarrer la compilation ce qui peut sauver du temps. 
+    J'utilise <code>-j 8</code> pour utiliser to mes 8 coeurs 
+    processeur. C'est possible de mettre moins de coeur pour continuer 
+    à utiliser l'ordinateur pendant la compilation.
+  </p>
+  <p>
+    Pour une raison inconnue, ma première compilation à échoué parce 
+    que <code>build.host=i586-unknown-linux-gnu</code> et 
+    <code>build.target=i586-unknown-linux-gnu</code> n'étaient pas du type 
+    <code>sequence</code> dans le fichier <code>config.toml</code>. J'ai 
+    édité le fichier en utilisant <code>vim config.toml</code> et j'ai ajouté 
+    <code>[ ]</code> alentour des valeurs pour obtenir 
+    <code>
+<pre>
+host = ['i586-unknown-linux-gnu']
+target = ['i586-unknown-linux-gnu']
+</pre>
+    </code>
+    On peut probablement passer 
+    <code>--set build.host=['i586-unknown-linux-gnu']</code> et 
+    <code>--set build.target=['i586-unknown-linux-gnu']</code> à la commande 
+    <code>./configure</code> pour que des séquences soient ajoutées à 
+    <code>config.toml</code>, mais je ne l'ai pas testé alors ce n'est peut-
+    être pas la bonne syntaxe.
+  </p>
+  <p>
+    La compilation se complètera et on trouvera plusieurs fichiers 
+    <code>.tar.gz</code> dans le répertoire <code>rust/build/dist/</code>. 
+    On veut l'archive 
+    <code>rust-1.71.1-dev-i586-unknown-linux-gnu.tar.gz</code><br>
+    On peut l'extraire avec <code>tar -xvf</code> pour valider que 
+    <code>cargo</code> et <code>rustc</code> sont là avec plusieurs autres 
+    fichiers. Ce sont tous les modules requis pour pouvoir compiler du 
+    <code>rust</code>.
+  </p>
+  <h2>
+    Téléchargement et installation de 
+    <code>rust-1.71.1-dev-i586-unknown-linux-gnu.tar.gz</code> 
+    sur le 560Z
+  </h2>
+  <p>
+    On peut utiliser FTP pour télécharger le fichier sur le 560Z.
+    <code>
+<pre>
+ftpget -v -u utilisateur_a_remplacer -p mot_de_passe_a_remplacer replace_with_your_IP-192.168.0.155 rust-1.71.1-dev-i586-unknown-linux-gnu.tar.gz
+md5sum rust-1.71.1-dev-i586-unknown-linux-gnu.tar.gz
+tar -xf rust-1.71.1-dev-i586-unknown-linux-gnu.tar.gz
+mkdir rust-1.71.1-i586
+mkdir rust-1.71.1-i586/etc
+cd rust-1.71.1-dev-i586-unknown-linux-gnu
+sudo sh ./install.sh --verbose --destdir=/home/tc/rust-1.71.1-i586 --sysconfdir=/home/tc/rust-1.71.1-i586/etc
+export PATH=/home/tc/rust-1.71.1-i586/usr/local/bin:$PATH
+</pre>
+    </code>
+    La dernière commande 
+    <code>export PATH=/home/tc/rust-1.71.1-i586/usr/local/bin:$PATH</code> 
+    est à refaire à chaque redémarrage. Vu qu'on ne peut pas générer un 
+    <code>rust-1.71.1-pii.tcz</code> pour ensuite le charger automatiquement 
+    en mémoire vive au démarrage avec <code>/mnt/sda2/tce/onboot.lst</code> 
+    il faut utiliser les fichiers qui sont directement sur le disque. Si le 
+    portable avait plus de mémoire, on pourrait générer un <code>.tcz</code> 
+    et le charger en mémoire vive 
+    <a href="./generer_rust_tcz.html">
+      comme il est possible de le faire avec le ThinkPad 600x ici.
+    </a>
+  </p>
+  <h2>Utiliser <code>cargo</code></h2>
+  <p>
+    Maintenant, il devrait être possible d'exécuter 
+    <code>
+<pre>
+rustc --version
+cargo --version
+cargo new hello-world
+cd hello-world
+cargo run
+</pre>
+    </code>
+  </p>
+  <p>
+    S'il y a une erreur indiquant que <code>cc</code> est manquant, on peut 
+    installer ceci :
+    <code>
+<pre>
+tce-load -wi gcc.tcz
+tce-load -wi glibc_base-dev.tcz
+</pre>
+    </code>
+    <code>rust</code> a besoin d'un linker C pour pouvoir fonctionner. 
+    J'ai compris en lisant 
+    <a href="http://forum.tinycorelinux.net/index.php/topic,22216.msg139089.html#msg139089">
+      piCore 9.x ARMv6 g++ compilation error
+    </a>
+    et
+    <a href="https://stackoverflow.com/questions/52445961/how-do-i-fix-the-rust-error-linker-cc-not-found-for-debian-on-windows-10">
+      How do I fix the Rust error "linker 'cc' not found" for Debian on Windows 10?
+    </a>
+  </p>
+  <h2>Remerciements!</h2>
+  <p>
+    Merci à
+    <ul>
+      <li>
+        Un grand merci à Adam qui a créé ce site avec les instructions à suivre
+        sur Gentoo Linux 
+        <a href="https://ww1.thecodecache.net/projects/p2-rust/">
+          Building Rust for a Pentium 2
+        </a>
+      </li>
+      <li>
+        Thanks to juanito for <code>gcc.tcz</code> (
+        <a href="http://tinycorelinux.net/14.x/x86/tcz/gcc.tcz.info">
+          gcc.tcz.info
+        </a>)
+        et pour <code>glibc_base-dev.tcz</code> (
+        <a href="http://tinycorelinux.net/14.x/x86/tcz/glibc_base-dev.tcz.info">
+          glibc_base-dev.tcz.info
+        </a>
+      </li>
+    </ul>
+  </p>
+</body>
+
+</html>

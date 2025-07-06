@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>multi-boot</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../facedebouc.sbs.css">
+</head>
+
+<body>
+  <h1>multi-boot</h1>
+  <p>
+  Un vecchio computer aveva Vista. Dopo si è ritrovato con un dual-boot con Linux Mint 19.3.
+  Anchora un poco più dopo, è arrivato Devuan 5.0 e ho anche installato TinyCore Linux 15.
+  <ol>
+    <li>Vista usa 3 partizione. Installando Linux Mint, ho creato un extended partition.</li>
+    <li>Installando Devuan, ho creato partizione nel extended partiziona per Devuan, Swap e per TCL.</li>
+    <li>Vista aveva /dev/sda1,2,3. L'extended era /dev/sda4. Mint era sulla /dev/sda5; Devuan sulla /dev/sda6; la Swap sulla /dev/sda7 e TCL sulla /dev/sda8</li>
+    <li>Mint controllava grub.</li>
+    <li>Ho formattato /dev/sda8 con ext4 e quando ho installato TCL 15, ho usato la partiziona cosi perche c'è un bug nella vecchia versione di grub che uso che non riconosce le partizione ext4 formattate da TCL 15 <a href='https://forum.tinycorelinux.net/index.php/topic,26756.30.html'>grub cannot read usb drive's ext4 partition</a></li>
+    <li>In Mint, ho eseguito <code>sudo update-grub</code> che ha trovato Devuan</li>
+    <li>In Mint, ho cambiato /etc/default/grub GRUB_DEFAULT=6 perché 6 è l'entrata di Devuan e ho eseguito update-grub</li>
+    <li>In Mint, ho creato un file /boot/grub/custom.cfg e ho inserito il codice per TCL.</li>
+  </ol>
+  Il codice per TCL in custom.cfg
+  <xmp>
+menuentry 'TCL 15' {
+  set root='hd0,msdos8'
+  linux /tce/boot/vmlinuz
+  initrd /tce/boot/core.gz
+}
+  </xmp>
+  </p>
+</body>
+
+</html>
