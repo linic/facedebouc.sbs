@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>passwd</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Cos'è <code>passwd</code>?</h1>
+  <p>
+    <code>passwd</code> permette di cambiare una password dimenticata.
+  </p>
+  <ol>
+    <li>Avviare il computer e premere il tasto 'e' all'elenco <code>grub</code></li>
+    <li>Con i tasti frecce, spostare il cursore alla fine della linea che comincia con <code>linux</code> </li>
+    <li>Aggiungere <code> rw init=/bin/bash</code> e premere il tasto F10.</li>
+    <li>All'invito dei commandi, entrare <code>mount | grep -w /</code> e confermare che il filesystem è stato montato con (rw,realtime)</li>
+    <li>Usare il comando <code>passwd</code> con il nome del utente che si è dimenticato la password.</li>
+    <li>Entrare la password una volta et premere il tasto "Enter". (La password sarà invisibile.)</li>
+    <li>Entrare la stessa password un ultima volta e riavviare il computer.</li>
+  </ol>
+</body>
+
+</html>
+

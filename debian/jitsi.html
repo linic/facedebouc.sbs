@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>jitsi</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Cos'è <code>jitsi</code>?</h1>
+  <p>
+    <code>jitsi</code> permette a clienti di fare chiamate audio e video.
+  </p>
+  <p>
+    Non sono riuscito a fare funzionarlo so un RPI B+ perché JAVA non funzionava bene.
+    Ho dovuto rimuoverlo con <code>apt purge jitsi*</code> perché non potevo rinnovare
+    il certificato TLS di apache. Quando <code>jitsi</code> si installa, crea una nuova
+    configurzione <code>facedebouc.sbs.conf</code> in <code>/etc/apache2/sites-available/</code>
+    e quando <code>certbot --apache</code> si lancia, prova a cambiare <code>000-default.conf</code>
+    e <code>000-default-le-ssl.conf</code> (almeno penso) e il suo challenge non funziona.
+  </p>
+</body>
+
+</html>
+

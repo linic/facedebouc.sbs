@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Cambiare la luminosità dello schermo</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Cambiare la luminosità dello schermo</h1>
+  <p>
+    Sul mio computer Lenovo, c'è un documento 
+    <code>/sys/class/backlight/intel_backlight/brightness</code> che a il valore 
+    corrente del livello di luce del schermo.
+    C'è anche <code>/sys/class/backlight/intel_backlight/max_brightness</code> 
+    che contiene il valore massimo.
+  </p>
+  <p>
+    Per cambiare il valore dal terminal basta <code>
+<pre>
+sudo su
+echo 0 &gt; /sys/class/backlight/intel_backlight/brightness 
+</pre>
+    </code> che a il valore 
+  </p>
+  <p>
+  È anche possibile di configurare il sistema cosi :
+<xmp>
+sudo chown il-mio-utente:il-gruppo-del-mio-utente /sys/class/backlight/intel_backlight/brightness
+</xmp>
+  e dopo possiamo scrivere un documento eseguibile con <code>vim /code/luminosita_0.sh</code> con il 
+  contento seguente :
+<xmp>
+#!/bin/bash
+echo 0 > /sys/class/backlight/intel_backlight/brightness
+</xmp>
+  e dopo possiamo usarlo aggiungendo in <code>vim ~/.bash_aliases</code> il contenuto seguente :
+<xmp>
+alias luminosita_0='/code/luminosita_0.sh'
+</xmp>
+  e dopo esenguendo <code>source ~/.bash_aliases</code> per rendere la scorciatoia effettiva. 
+  Adesso, è possible di esseguire direttamente <code>luminosita_0</code> nel terminale.
+  </p>
+  <p>
+  Avendo il documento eseguibile, è anche possibile di andare nelle scorciatoie della tastiera per 
+  aggiungerne un nuovo. È necessario un nome e nel campo comando possiamo scrivere 
+  <code>/code/luminosita_0.sh</code>
+  </p>
+  <p>
+  È importante di cambiare il proprietario del documento <code>brightness</code> dopo ogni 
+  riavvio del computer.
+  </p>
+  <h2>Ringraziamenti!</h2>
+  <a href="https://wiki.debian.org/InstallingDebianOn/Thinkpad/X13s#X.org_brightness_control">
+    Grazie al wiki.debian.org per la pagina su il Thinkpad.
+  </a><br>
+  <a href="https://unix.stackexchange.com/questions/473901/execute-script-at-startup">
+    Questa pagina può essere utile nel futuro per eseguire una sceneggiatura.
+  </a>
+</body>
+
+</html>
+
+<xmp>
+
+</xmp>

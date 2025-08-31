@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>temi</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Come cambiare il tema di Debian Mate?</h1>
+  <p>
+    Ci sono parecchi temi qui <code>/usr/share/themes/</code>. È possibile di copiare una cartella 
+    come <code>sudo cp -r WinMe WinMe2</code> e di modificare il documento <code>.xml</code> che 
+    definisce i colori.
+  </p>
+  <p>
+    :%s/526bad/f4af00/g
+    :%s/0a246a/6b1b09/g
+    :%s/94b5dc/dbc092/g
+    :%s/a6caf0/efd1a5/g
+    :%s/gtk:bg[NORMAL]/#c6c4c0/g
+    :%s/ffffff/dddddd/g
+  </p>
+</body>
+
+</html>
+

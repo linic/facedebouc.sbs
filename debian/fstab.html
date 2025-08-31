@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html><head><title>fstab</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è <code>fstab</code>?</h1>
+<p><code>fstab</code> permette di decidere cosa fare con i dischi.</p>
+<p>La sua configurazione si trova a <code>/etc/fstab</code></p>
+<p><code>
+# Per trovare il UUID delle partizione del disco e i loro tipi.
+sudo blkid
+sudo vim /etc/fstab
+# e aggiungere linee simile a queste
+# UUID=AE82-4BC1 none vfat noauto 0 0
+# UUID=6d2ff93e-eacd-415c-96d5-4611ad21e05f none ext4 noauto 0 0
+</code></p></body>
+</html>
+

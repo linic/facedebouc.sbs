@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html><head><title>gsettings</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è <code>gsettings</code>?</h1>
+<p><code>gsettings</code> permette di cambiare is settings di nautilus in Debian.</p>
+<p>Per disabilitare il montaggio automatico di dischi:
+<code>
+gsettings describe org.gnome.desktop.media-handling automount
+gsettings set org.gnome.desktop.media-handling automount false
+gsettings get org.gnome.desktop.media-handling automount
+</code></p>
+<p><code>
+$ gsettings --help
+Commande inconnue --help
+
+Utilisation :
+gsettings --version
+gsettings [--schemadir RÉPERTOIRE2SCHÉMA] COMMANDE [PARAMÈTRES…]
+
+Commandes :
+helpAffiche la présente information
+list-schemasListe les schémas installés
+list-relocatable-schemasListe les schémas réadressables
+list-keys Liste les clés dans un schéma
+list-children Liste les enfants d’un schéma
+list-recursivelyListe les clés et les valeurs, récursivement
+range Demande le domaine de validité de la clé
+describeDemande la description de la clé
+get Renvoie la valeur d’une clé
+set Définit la valeur d’une clé
+reset Rétablit la valeur par défaut d’une clé
+reset-recursively Rétablit toutes les valeurs dans un schéma donné
+writableTeste si la clé est inscriptible
+monitor Contrôle les modifications
+
+Saisissez « gsettings help COMMANDE » pour une aide détaillée.
+</code></p></body>
+</html>
+

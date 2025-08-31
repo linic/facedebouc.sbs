@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>cups</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Cos'è <code>cups</code>?</h1>
+  <p>
+  <code>cups</code> permette di condividere una stampante USB sulla rete.<br>
+  <code>DefaultPaperSize</code> si trova in <code>/etc/cups/cupsd.conf</code>.<br>
+  <code>DefaultPaperSize Letter</code> permette di cambiare la taglia della carta usata.
+  </p>
+  <xmp>
+sudo apt-get install samba -y
+sudo systemctl enable --now smb
+
+sudo vim /etc/samba/smb.conf
+printing = CUPS
+[printers]
+   comment = All Printers
+   browseable = yes
+   path = /var/spool/samba
+   printable = yes
+   guest ok = yes
+   read only = yes
+   create mask = 0700
+
+ip address # per trovare l'indirizzo del computer attuale
+sudo vim /etc/cups/cupsd.conf
+Listen localhost:631 # cambiare localhost per l'indirizzo del computer
+Browsing Yes
+<Location />
+  Order allow,deny
+  Allow localhost
+  Allow 192.168.1.*  # a cambiare con l'indirizzo della rete dove condividere la stampante
+</Location>
+
+sudo systemctl restart smb
+sudo systemctl restart cups
+  </xmp>
+  <h1>Più informazioni</h1>
+  <p>
+  <ol>
+    <li><a href="https://www.cups.org/doc/man-cupsd.conf.html">cupsd.conf</a></li>
+    <li><a href="https://www.zdnet.com/article/how-to-share-a-printer-on-linux-with-cups-and-samba/">cups e samba</a></li>
+  </ol>
+  </p>
+</body>
+
+</html>
+

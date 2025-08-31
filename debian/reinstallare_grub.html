@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>grub</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-size: 2em;
+        }
+    </style>
+</head>
+
+<body>
+    <p>Come re-installare grub.</p>
+    <fieldset>
+        <legend>Elementi necessari</legend>
+        <label>
+            <input type="checkbox">
+            Live CD Debian récent
+        </label><br>
+        <label>
+            <input type="checkbox">
+            L'ordinateur à réparer
+        </label><br>
+    </fieldset>
+    <fieldset>
+        <legend>Tappe</legend>
+        <ol>
+            <li>
+                S'assurer que le BIOS est en mode UEFI seulement. Désactiver le Secure Boot. 
+                Malgré le nom, le Secure Boot est une technologie de Microsoft et elle empêche 
+                d'installer d'autres systèmes d'exploitation. Dans le cas de mon BIOS ASUS, 
+                je dois peser sur DELETE pour entrer dans le BIOS.
+            </li>
+            <li>
+                Démarrer à partir du Live CD. Il faut peut-être peser sur F8 quand le message 
+                POST du BIOS s'affiche au démarrage pour pouvoir sélectionner le DVD.
+            </li>
+            <li>
+                Vérifier que le système s'est bien chargée en UEFI en vérifiant le répertoire 
+                <code>/sys/firmware/efi/efivars</code> et en vérifiant qu'il y a plusieurs 
+                fichiers à l'intérieur.
+            </li>
+            <li>
+                Si la partition de boot est /dev/sdb2 et la partition root est /dev/sdb3, 
+                monter /dev/sdb3 en premier et /dev/sdb2 ensuite. 
+                Voir 
+                <a href="./copia_debian_wiki_grub_efi_reinstall.html"> GrubEFIReinstall (copie sur facedebouc.sbs)</a>
+                ou
+                <a href="https://wiki.debian.org/GrubEFIReinstall">LIEN EXTERNE - GrubEFIReinstall</a>.
+            </li>
+        </ol>
+    </fieldset>
+</body>
+
+</html>

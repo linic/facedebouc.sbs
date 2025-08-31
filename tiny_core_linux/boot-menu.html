@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html><head><title>Boot Menu</title><meta charset="UTF-8"><link rel="stylesheet" href="../facedebouc.sbs.css"></head><body>
+<h1>Boot Menu</h1>
+<p>Sul mio ThinkPad 560Z, il boot menu è a <code>/mnt/sda1/tce/boot/extlinux/extlinux.conf</code>
+<ol>
+<li>Use <code>curl</code> or <code>wget --no-check-certificate </code>per ottenere un <code>bzImage</code> o <code>vmlinuz</code> e un <code>core.gz</code></li>
+<li><code>sudo mount /dev/sda1</code></li>
+<li><code>mkdir /mnt/sda1/boot/tce/custom/</code></li>
+<li><code>cp bzImage_5.10.233.15.1 /mnt/sda1/boot/tce/custom/</code></li>
+<li><code>cp core_5.10.233.15.1.gz /mnt/sda1/boot/tce/custom/</code></li>
+<li><code>vim /mnt/sda1/tce/boot/extlinux/extlinux.conf</code> e aggiungere:
+<xmp>
+LABEL 5.10.233.15.1
+KERNEL /tce/boot/custom/bzImage-5.10.233.15.1
+INITRD /tce/boot/custom/core-5.10.233.15.1.gz
+APPEND vga=789 syslog showapps nozswap
+</xmp>
+Ci deve essere una linea <code>TIMEOUT 100</code> per lasciare abastanza tempo per scegliere l'opzione quando il computer riavvierà.
+</li>
+<li><code>sudo reboot</code></li>
+</ol></p>
+<h2>Kernels e <code>core.gz</code> per il 560Z</h2>
+<p>È possibile usare questi per provare a aggiungere un entrata nel boot menu di TCL:
+<a href="./tcl-core-560z.html">Kernels e <code>core.gz</code> per il 560Z</a></p></body>
+</html>

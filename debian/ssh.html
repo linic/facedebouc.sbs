@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html><head><title>ssh</title><meta charset="UTF-8"></head><body>
+<h1>SSH con chiave asimettrica / SSH với chìa khóa không đối xứng</h1>
+<h2>Riassunto / Tóm tắt</h2>
+<p>Configurare una chiave asimmetrica per connettere un cliente con un server tramite SSH.
+Viết chìa khóa không đối xứng của client ở trong server SSH.</p>
+<h2>I comandi / Đơn đặt hàng</h2>
+<p>Generare una chiave:<br>
+Làm chìa khóa:<br>
+<code>utente@cliente:~/.$ ssh-keygent -t ed25519</code></p>
+<p>Copiare la parte pubblica della chiave sul server:<br>
+Viết chìa khóa của client ở trong server SSH:<br>
+<code>utente@cliente:~/.$ scp /home/utente/.ssh/id_ed25519.pub\ utente@server:/home/utente/id_ed25519.pub</code></p>
+<p>Aggiungere la chiave alle authorized_keys:<br>
+Viết chìa khóa ở trong authorized_keys của server:<br>
+<xmp>
+utente@cliente:~/.$ ssh utente@server
+utente@server:~/.$ cat ~/id_ed25519.pub >> ~/.ssh/authorized_keys
+</xmp></p>
+<p>Adesso, puoi connetterti al server senza entrare il nome utente e la password. 
+Bây giò, đi ra khỏi server và đi vô lại server. Không cần username và password. 
+Se vuoi rimuovere la possibilità di connettersi con il nome utente e una password puoi 
+fare questo:<br>
+Néu muốn lấy ra cách mở với username và password, tiếp tụp với cái nầy:<br>
+<code>utente@server:~/.$ sudo vim /etc/ssh/sshd_config</code></p>
+<p>Rimuovi il # su:<br>
+Xóa # ở cạnh cái nầi:
+<xmp>
+PermitRootLogin prohibit-password
+PasswordAuthentication no
+</xmp></p>
+<p>Ripartire il server SSH con questo comando:<br>
+Tắt server và bật server SSH với cái nầy:<br>
+<code>utente@server:~/.$ sudo systemctl reload ssh</code></p>
+<p>Se provi ancora a connettere senza chiave da un altro cliente, verrai questo:<br>
+Néu không có chìa khóa, đi vô lại server, không hoạt động. Đọc này:<br>
+<code>Permission denied (publickey)</code></p>
+<p>Quando fai la connessione al server per la prima volta, un fingerprint
+mostrato. Per vederlo primo della connessionne in un terminale del server fail
+<code>ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub</code><br>
+<a href="https://bitlaunch.io/blog/how-to-check-your-ssh-key-fingerprint/">
+https://bitlaunch.io/blog/how-to-check-your-ssh-key-fingerprint/"
+</a></p></body>
+</html>

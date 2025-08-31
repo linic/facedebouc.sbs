@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<!--
+Ce programme est un échiquier avec ses pièces amovibles. Une pièce se déplace en cliquant sur celle-ci
+et en maintenant le bouton gauche de la souris enfoncé tout en déplaçant la souris.
+
+Aucune règle du jeu d'échecs n'est programmée. Comme pour un jeu d'échecs physique, on n'a qu'à suivre
+les règles nous-mêmes. Les pièces ne sont pas non plus placées d'avance. Comme un jeu d'échec physique,
+c'est à nous de les placer. Aucun état n'est sauvegardé. Faire F5 après avoir déplacé des pièces les
+remettra à l'endroit d'origine.
+
+Copyright (C) 2022 Alpaca Balena.
+
+Ce programme est libre, vous pouvez le redistribuer et/ou le modifier selon les termes de la Licence
+Publique Générale GNU telle que publiée par la Free Software Foundation ; soit la version 3 de cette
+licence, soit (à vous de voir...) toute autre version ultérieure.
+
+Ce programme est distribué dans l'espoir qu'il sera utile, mais SANS AUCUNE GARANTIE, ni explicite ni
+implicite, y compris les garanties de commercialisation ou d'adaptation dans un but spécifique. Prenez
+connaissance de la Licence Publique Générale GNU pour plus de détails.
+
+Vous devez avoir reçu une copie de la Licence Publique Générale GNU avec ce programme ; si ce n'est pas le
+cas, voir <https://www.gnu.org/licenses/>.
+-->
+<html>
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <style>
+            .echiquier { border-spacing: 0; border-collapse: collapse; font: 1rem monospace; color: #000099; }
+            .echiquier th { padding: .5em; }
+            .echiquier th + th { border-bottom: 1px solid #000; }
+            .echiquier th:first-child,
+            .echiquier td:last-child { border-right: 1px solid #000; }
+            .echiquier tr:last-child td { border-bottom: 1px solid; }
+            .echiquier th:empty { border: none; }
+            .echiquier td { width: 1.5em; height: 1.5em; text-align: center; font-size: 32px; line-height: 0;}
+            .echiquier .clair { background: #ffe6f0; }
+            .echiquier .fonce { background: #00ff55; }
+            .amovible {
+              position: absolute;
+              z-index: 9;
+              text-align: center;
+              cursor: move;
+              font-size: 42px;
+              color: #000099;
+            }
+            body {
+              background: #f3ffe6;
+            }
+        </style>
+    </head>
+    <body>
+      <h1>Échiquier gratuit</h1>
+      <p>Les pièces sont déplaçables à la souris. Pour réinitialiser la page, faire F5.</p>
+        <table class="echiquier">
+            <tbody>
+                <tr>
+                    <th></th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                    <th>D</th>
+                    <th>E</th>
+                    <th>F</th>
+                    <th>G</th>
+                    <th>H</th>
+                </tr>
+                <tr>
+                    <th>8</th>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                </tr>
+                <tr>
+                    <th>7</th>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                </tr>
+                <tr>
+                    <th>6</th>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                </tr>
+                <tr>
+                    <th>5</th>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                </tr>
+                <tr>
+                    <th>4</th>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                </tr>
+                <tr>
+                    <th>3</th>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                </tr>
+                <tr>
+                    <th>2</th>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                </tr>
+                <tr>
+                    <th>1</th>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                    <td class="fonce"></td>
+                    <td class="clair"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="amovible" id="pion_vide_1">♙</div>
+        <div class="amovible" id="pion_vide_2">♙</div>
+        <div class="amovible" id="pion_vide_3">♙</div>
+        <div class="amovible" id="pion_vide_4">♙</div>
+        <div class="amovible" id="pion_vide_5">♙</div>
+        <div class="amovible" id="pion_vide_6">♙</div>
+        <div class="amovible" id="pion_vide_7">♙</div>
+        <div class="amovible" id="pion_vide_8">♙</div>
+        <div class="amovible" id="tour_vide_1">♖</div>
+        <div class="amovible" id="tour_vide_2">♖</div>
+        <div class="amovible" id="cavalier_vide_1">♘</div>
+        <div class="amovible" id="cavalier_vide_2">♘</div>
+        <div class="amovible" id="fou_vide_1">♗</div>
+        <div class="amovible" id="fou_vide_2">♗</div>
+        <div class="amovible" id="reine_vide">♕</div>
+        <div class="amovible" id="roi_vide">♔</div>
+
+        <div class="amovible" id="pion_plein_1">♟</div>
+        <div class="amovible" id="pion_plein_2">♟</div>
+        <div class="amovible" id="pion_plein_3">♟</div>
+        <div class="amovible" id="pion_plein_4">♟</div>
+        <div class="amovible" id="pion_plein_5">♟</div>
+        <div class="amovible" id="pion_plein_6">♟</div>
+        <div class="amovible" id="pion_plein_7">♟</div>
+        <div class="amovible" id="pion_plein_8">♟</div>
+        <div class="amovible" id="tour_pleine_1">♜</div>
+        <div class="amovible" id="tour_pleine_2">♜</div>
+        <div class="amovible" id="cavalier_plein_1">♞</div>
+        <div class="amovible" id="cavalier_plein_2">♞</div>
+        <div class="amovible" id="fou_plein_1">♝</div>
+        <div class="amovible" id="fou_plein_2">♝</div>
+        <div class="amovible" id="reine_pleine">♛</div>
+        <div class="amovible" id="roi_plein">♚</div>
+        <script>
+        pieces_existantes = ["tour_vide_1", "tour_vide_2", "tour_pleine_1", "tour_pleine_2", "pion_vide_1", "pion_vide_2", "pion_vide_3", "pion_vide_4", "pion_vide_5", "pion_vide_6", "pion_vide_7", "pion_vide_8", "cavalier_vide_1", "cavalier_vide_2", "fou_vide_1", "fou_vide_2", "reine_vide", "roi_vide", "pion_plein_1", "pion_plein_2", "pion_plein_3", "pion_plein_4", "pion_plein_5", "pion_plein_6", "pion_plein_7", "pion_plein_8", "cavalier_plein_1", "cavalier_plein_2", "fou_plein_1", "fou_plein_2", "reine_pleine", "roi_plein"];
+        placement_initial();
+
+        function placement_initial() {
+            /* Placement initial simplement pour voir toutes les pièces et éviter qu'elles soient empilées. */
+            var increment = 40, position_initiale_x = increment, position_initiale_y = increment, limite_ligne = 8 * increment;
+            for (let index in pieces_existantes)
+            {   //Rendre la piece amovible.
+                var piece = document.getElementById(pieces_existantes[index]);
+                piece.style.top = position_initiale_x + "px";
+                piece.style.left = position_initiale_y + "px";
+                position_initiale_y += increment;
+                if (position_initiale_y > limite_ligne)
+                {
+                    position_initiale_x += increment;
+                    position_initiale_y = increment;
+                }
+                rendre_amovible(piece);
+            }
+        }
+
+        function rendre_amovible(piece) {
+          var deplacement_piece_x = 0, deplacement_piece_y = 0, souris_x = 0, souris_y = 0;
+          piece.onmousedown = prendre_piece;
+
+          function prendre_piece(e) {
+            /* Faire comme si on prenait la pièce du jeu d'échecs.
+             * Activer le déplacement de la pièce proportionnellement au déplacement de la souris. */
+            e = e || window.event;
+            e.preventDefault();
+            // Enregistrement de la position de départ de la souris.
+            souris_x = e.clientX;
+            souris_y = e.clientY;
+            document.onmouseup = deposer_piece;
+            // call a function whenever the cursor moves:
+            document.onmousemove = bouger_piece;
+          }
+
+          function bouger_piece(e) {
+            /* Bouger la pièce en même temps que la souris bouge. */
+            e = e || window.event;
+            e.preventDefault();
+            // Calculer le déplacement de la pièce.
+            deplacement_piece_x = souris_x - e.clientX;
+            deplacement_piece_y = souris_y - e.clientY;
+            // Enregistrer la nouvelle position de la souris.
+            souris_x = e.clientX;
+            souris_y = e.clientY;
+            // Déplacer la pièce.
+            piece.style.top = (piece.offsetTop - deplacement_piece_y) + "px";
+            piece.style.left = (piece.offsetLeft - deplacement_piece_x) + "px";
+          }
+
+          function deposer_piece() {
+            /* Faire comme si on déposait la pièce du jeu d'échecs.
+             * Arrêter la logique de déplacement de la pièce lorsque le bouton de la souris est relâché. */
+            document.onmouseup = null;
+            document.onmousemove = null;
+          }
+        }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>vsftpd</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-size: 2em;
+        }
+    </style>
+</head>
+
+<body>
+    <fieldset>
+        <legend>Installare e configurare <code>vsftpd</code> per accesso anonimo</legend>
+        <ol>
+            <li>
+                Aggiornare l'indice dei pacchetti: <code>sudo apt-get update</code>
+            </li>
+            <li>
+                Installare is server FTP: <code>sudo apt-get install vsftpd</code>
+            </li>
+            <li>
+                Creare una cartella per mettere i file da condividere: <code>sudo mkdir -p /var/condivisione</code>
+            </li>
+            <li>
+                Cambiare l'utente e il gruppo: <code>sudo chown nobody:nogroup /var/condivisione</code>
+            </li>
+            <li>
+                Muovere i file da condividere in <code>/var/condivisione/</code><br>
+                Cambiare l'utente e il gruppo di ogni file: <code>sudo chown nobody:nogroup /var/condivisione/*</code>
+            </li>
+            <li>
+                Cambiare la configurazione del server vsftpd: <br>
+                <code>sudo vim /etc/vsftpd.conf</code><br>
+                <pre><code>
+# Autorizzare il collegamento anonimo.
+anonymous_enable=YES
+
+# Rifiutare agli utenti di collegarsi con il
+# loro conto. Questo server è solo il lettura.
+local_enable=NO
+
+# Cartella da mostrare agli clienti FTP.
+anon_root=/var/condivisione/
+
+# Smettere di domandare per una password.
+no_anon_password=YES
+
+# Abbiamo già cambiato per nobody:nogroup, ma
+# questa configurazaione aggiunge un poco di
+# sicurezza si ci siamo scordati di cambiare
+# l'utente e il gruppo per uno dei file. Tutti
+# i file sembreranno appartenere a sftp:ftp.
+hide_ids=YES
+
+# Limitare i porti che possono essere usati
+# per FTP passivo.
+pasv_min_port=40000
+pasv_max_port=50000
+                </code></pre>
+                <a href="https://wiki.debian.org/SystemGroups">(LEGAME
+                    ESTERNO) Spiegazione di perché usare <code>nobody:nogroup</code></a>
+            </li>
+            <li>
+                Riavviare il server vsftpd per ricaricare la configurazione:<br>
+                <code>sudo systemctl restart vsftpd</code><br>
+                <code>sudo systemctl status vsftpd</code><br>
+            </li>
+            <li>
+                I clienti FTP possono collegarsi al server senza utente. Potrano solo leggere e copiare i file dal
+                server. Il file explorer di Debian permette gia il collegamento con <code>ftp://indirizzo/</code>
+            </li>
+        </ol>
+    </fieldset>
+    <fieldset>
+        <legend>Per impararne di più...</legend>
+        <ul>
+            <li>Il manuale di configurazion di vsftpd: <code>man vsftpd.conf.5</code></li>
+            <li> <a
+                    href="https://www.digitalocean.com/community/tutorials/how-to-set-up-vsftpd-for-anonymous-downloads-on-ubuntu-16-04">(LEGAME
+                    ESTERNO) Articolo originale</a></li>
+        </ul>
+    </fieldset>
+    <p>Articolo aggiornato il 2023-03-20.</p>
+</body>
+
+</html>

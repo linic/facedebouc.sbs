@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>yt-dlp</title>
+<meta charset="UTF-8">
+</head>
+
+<body>
+<h1>Come usare <code>yt-dlp</code>?</h1>
+<p>Per usare <code>yt-dlp</code> :<br>
+<code>py001 -m pip install -U "yt-dlp[default]"</code><br>
+<code>/code/py001/bin/yt-dlp -x --audio-format vorbis http://wiby.me/</code><br> (rimpiazare l'URL)<br>
+CTRL + X quando è stato caricato il file <code>.web</code><br>
+<code>/code/FFmpeg/ffmpeg -i file.webm file.mp3</code><br>
+<h1>Comment compiler son propre <code>ffmpeg</code></h1></p>
+<xmp>
+# Pour configurer ffmpeg pour qu'il puisse décoder du webm et réencoder du mp3:
+./configure --disable-everything --disable-network --disable-autodetect --enable-small --enable-protocol=file,pipe --enable-demuxer=matroska --enable-muxer=mp3 --enable-decoder=vorbis,opus --enable-encoder=libmp3lame --enable-libmp3lame --enable-filter=aresample
+# Il faut cloner le répertoire de ffmpeg avant avec:
+git clone https://github.com/FFmpeg/FFmpeg.git
+# Il faut aussi installer yasm
+sudo apt-get install yasm libmp3lame-dev
+# Pour convertir, en assumant qu'on est dans le dossier où l'exécutable compilé de ffmpeg se trouve.
+./ffmpeg -i fichier.webm fichier.mp3
+</xmp>
+<p>
+<a href="../python/venv.html"><code>python3 venv</code>per capire perché uso <code>/code/py001</code></a><br>
+<a href="https://ostechnix.com/yt-dlp-tutorial/">Yt-dlp Commands: The Complete Tutorial For Beginners (2024)</a><br>
+<li><a href="https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#usage-and-options">yt-dlp usage and options</a><br>
+</ul></p>
+</body>
+
+</html>
+

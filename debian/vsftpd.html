@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>vsftpd</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Cos'è <code>vsftpd</code>?</h1>
+  <p>
+    <code>vsftpd</code> è un server FTP popolare e facile a configurare.
+  </p>
+  <p>
+    La sua configurazione di base si trova a <code>/etc/vsftpd.conf</code>
+  </p>
+  <p>
+    <code>
+      sudo apt update
+      sudo apt install vsftpd
+      sudo adduser ftpsecure
+      sudo vim /etc/vsftpd.conf
+    </code>
+    Nel file di configuration, rendere effetivo la linea con l'utente ftpsecure.
+  </p>
+</body>
+
+</html>
+

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Analizzare problemi di rete</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Analizzare i problemi di rete</h1>
+  <p>
+    <code>systemd-resolve nome-del-computer</code> permette di verificare se 
+    la risoluzione dei nomi di host funziona.
+  </p>
+  <p>
+    <code>dig @8.8.8.8 il-mio-sito.il-mio-dominio.sbs</code> per vedere se i 
+    pachetti DNS transitano come si deve verso il server 8.8.8.8.
+  </p>
+  <p>
+    <code>ping 8.8.8.8</code> per vedere se il server 8.8.8.8 può essere 
+    raggiunto.
+  </p>
+  <p>
+    <code>traceroute 8.8.8.8 -p 53 -U</code> per vedere se i pachetti DNS si 
+    rendono come si deve al server DNS con UDP.
+  </p>
+</body>
+
+</html>
+
