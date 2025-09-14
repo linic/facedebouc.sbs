@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html><head><title>fltk</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è <code>fltk</code>?</h1>
+<p><code>fltk</code> permette di programmare un interfacia grafica con C++.</p>
+<ol><li><code>sudo apt update</code><br>
+<code>sudo apt install autoconf</code><br>
+<a href="https://www.fltk.org/doc-1.4/intro.html">fltk - intro</a></li>
+<li><code>cd /code/</code><br>
+<code>git clone https://github.com/fltk/fltk.git</code><br>
+<code>cd fltk</code><br>
+<code>make</code><br>
+<a href="https://www.fltk.org/doc-1.4/intro.html">fltk - intro</a></li>
+<li><code>cd /code/</code><br>
+<code>mkdir fltk-demo</code><br>
+<code>cd fltk-demo</code><br>
+<code>vi hello.cxx</code><br>
+<xmp>
+#include <FL/Fl.H>
+#include <FL/Fl_Window.H>
+#include <FL/Fl_Box.H>
+
+int main(int argc, char **argv) {
+Fl_Window *window = new Fl_Window(340, 180);
+Fl_Box *box = new Fl_Box(20, 40, 300, 100, "Hello, World!");
+box->box(FL_UP_BOX);
+box->labelfont(FL_BOLD + FL_ITALIC);
+box->labelsize(36);
+box->labeltype(FL_SHADOW_LABEL);
+window->end();
+window->show(argc, argv);
+return Fl::run();
+}
+</xmp>
+<a href="https://www.fltk.org/doc-1.4/basics.html">fltk - basics</a></li>
+<li><code>/code/fltk-config --compile hello.cxx</code><br>
+Che genere questo : <br>
+<code>g++ -I../fltk -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/include/pixman-1 -pthread -DUSE_SYSTEM_LIBDECOR=0 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_THREAD_SAFE -D_REENTRANT -o hello hello.cxx -rdynamic ../fltk/lib/libfltk.a -pthread -lpthread -lm -lwayland-cursor -lwayland-client -lxkbcommon -lpangocairo-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lcairo -lX11 -ldl -lpangocairo-1.0 -lpango-1.0 -lgobject-2.0 -lglib-2.0 -lharfbuzz -lcairo -lXinerama -lXcursor -lXfixes -lXrender -lX11</code><br>
+<a href="https://www.fltk.org/doc-1.4/basics.html">fltk - basics -Compiling Programs with the 'fltk-config' Script</a></li>
+<li><code>./hello</code><br>
+Il risultato :<br>
+<img src="./fltk-demo.jpg" alt="Imagine della finestra di fltk-demo"></li></ol>
+<h1>Altri esempi</h1>
+<a href="https://github.com/linic/cplusplus-samples/tree/main/messenger_network_demo">Un esempio con un interfaccia grafica fltk.</a></body>
+</html>
+
