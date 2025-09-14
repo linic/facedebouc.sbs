@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html><head><title>dual_boot_debian_13_grub</title><meta charset="UTF-8"><link rel="stylesheet" href="../facedebouc.sbs.css"></head><body>
+<h1>Dual-boot_avec Debian 13_et grub</h1>
+<p>J'ai essayé d'installer tiny core linux x86 avec une carte SD sur un ASUS EEE 1001PX, mais ça ne bootait pas.
+J'ai installé Debian 13 ensuite et j'ai modifié le grub de cette manière.</p>
+<p>
+<p>
+Pour commencer, à partir du menu grub, je suis passé dans la ligne de commande et j'ai tapé<br>
+<xmp>
+set root=(hd1,1)
+linux /boot/vmlinuz
+initrd /boot/core.gz
+boot
+</xmp>
+</p>
+<p>
+Ensuite, j'ai créé un <code>/etc/grub.d/40_custom</code> et j'ai ajouté un <code>menuentry</code><br>
+<xmp>
+menuentry "tiny-core-linux-16.1" {
+  set root=(hd1,1)
+  linux /boot/vmlinuz
+  initrd /boot/core.gz
+}
+</xmp><br>
+j'ai aussi modifié <code>/etc/default/grub</code> pour <code>GRUB_DEFAULT=2</code> et ensuite j'ai fait <code>sudo update-grub</code>. Après redémarrage, je bootais de la carte SD avec tiny core par défaut. Je me suis arrêté là.</p>
+<a href="https://askubuntu.com/questions/148095/how-do-i-set-the-grub-timeout-and-the-grub-default-boot-entry">modifier le timeout</a><br>
+<a href="https://askubuntu.com/questions/52963/how-do-i-set-windows-to-boot-as-the-default-in-the-boot-loader">changer l'entrée par défaut</a><br>
+<a href="https://help.ubuntu.com/community/Grub2/CustomMenus">page d'aide pour ajouter un menuentry</a><br></body>
+</html>
