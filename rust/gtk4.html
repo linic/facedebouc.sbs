@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html><head><title>gtk4</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è <code>gtk4</code>?</h1>
+<p><code>gtk4</code> permette di programmare con un interfacia grafica.</p>
+<h2>Configurazione</h2>
+<ul>
+<li>Installare il toolchain di rust.</li>
+<li><code>cargo new ui-demo</code></li>
+<li>Installare le dipendenze per programmare con gtk4 : 
+<a href="https://gtk-rs.org/gtk4-rs/stable/latest/book/installation_linux.html">
+gtk-rs.org - installation</a><br>
+<code>sudo apt install libgtk-4-dev build-essential</code></li>
+<li>Trovare la versione di gtk4 installata con <code>pkg-config --modversion gtk4</code><br>
+Per me, la versione era <code>4.8.3</code><br>
+<a href="https://gtk-rs.org/gtk4-rs/stable/latest/book/project_setup.html">
+gtk-rs.org - project setup</a></li>
+<li>Aggiungere gtk4 a <code>Cargo.toml</code> con <code>cargo add gtk4 --rename gtk --features v4_8</code></li>
+<li>Verificare che il <code>Cargo.toml</code> è stato configurato come si deve :
+<xmp>
+[package]
+name = "ui-demo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rand = "0.8.5"
+gtk = { version = "0.8.2", package = "gtk4", features = ["v4_8"] }
+</xmp>
+Il mio è cosi perché sto seguendo 
+<a href="https://www.youtube.com/watch?v=Fqo4iBApiqw">
+Jake Westall -Building A Simple App With Rust And GTK </a></li>
+<li><code>cargo run</code></li>
+<li>Se la dipendenza <code>gtk4.pc</code> non è trovata quando <code>cargo run</code> è eseguito : 
+<code>cd /usr/</code> e <code>find -name gtk4.pc</code><br>
+Per me, ho avuto bisogno di fare :
+<xmp>
+PKG_CONFIG_PATH="/usr/lib/x86_64-linux-gnu/pkgconfig/"
+export PKG_CONFIG_PATH
+</xmp></li></ul></body>
+</html>
+
