@@ -1,84 +1,91 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-  <title>Scorciatoie utili</title>
-  <meta charset="UTF-8">
-</head>
-
-<body>
-  <h1>Scorciatoie utili</h1>
-  <p>
-    <code>cd -</code> per tornare nella cartella precedente<br> 
-  </p>
-  <p>
-    <code>find -name parola*</code> per trovare un documento con un nome cominciando con la 
-    parola<br>
-    <code>find . -type f -newermt 2024-06-04 ! -newermt 2024-06-05 | less</code> per trovare i 
-    documenti modificati tra due dati.<br>
-  </p>
-  <p>
-    <code>grep -rne parola</code> per trovare tutte le linee dove la parola si trova tra tutti i 
-    documenti della cartella e delle ricorsivamente<br> 
-    <code>grep -e "parola" &gt; nome-documento.txt</code> per trovare le linee con la parola<br>
-    <code>grep -e 2024-01-01 --text /mio/camino/mio-documento.log</code> per mostrare il risultato 
-    in testo al terminale.
-  </p>
-  <p>
-    <code>wget sito.web</code> per scaricare una pagina web<br>
-    <code>wget --no-check-certificate -O - https://facedebouc.sbs</code> per mostare il codice 
-    della pagina direttamente alla consola e per ignorare il certificato quando non è buono
-  </p>
-  <p>
-    <code>less +G mio-lungo-log.log</code>
-    <code>?parola</code> mentre <code>less</code> è aperto per ricercare nelle linee precedenti
-  </p>
-  <p>
-    Quando c'è questo errore nel terminale 
-    <code>Error grabbing logs: invalid character '\x00' looking for beginning of value</code> 
-    è possibile di trovare il log cosi 
-    <code>sudo docker inspect --format='{{.LogPath}}' mio-contenitore</code> e dopo si usa 
-    <code>less +G mio-lungo-log.log</code> per leggere dalla fine.
-  </p>
-  <p>
-    Rimpiazare testo con <code>sed</code><br>
-    <code>sed -i 's/&amp;eacute;/é/g' nome-documento.txt</code> per rimpiazare <code>&amp;eacute;</code> con é<br> 
-    <code>sed -i '/path d/d' nome-documento.txt</code> per rimuovere tutte le linee con «path d»<br> 
-    <code>sed -i "s/$(parola)//g" documento.txt</code> per rimuovere la parola in ogni linea<br> 
-    <code>sed -i 's/&lt;p&gt;//g' documento.txt</code> per rimuovere <code>&lt;p&gt;</code><br> 
-    <code>sed -i 's/&lt;\/p&gt;//g'</code> per rimuovere <code>&lt;/p&gt;</code><br>
-    <code>sed -i 's/&lt;p style="text-align: justify;"&gt;//g' documento.txt</code><br> 
-  </p>
-  <p>
-    Cambiare la data dal terminale : <code>date -s '2024-01-20 20:40:35'</code>
-  </p>
-  <p>
-    Mostrare la data corrente nel terminale : <code>while :; do date; sleep 1; done</code><br>
-    Contare nel terminale <code>i=0; while :; do date; sleep 1; echo $i; ((i++)); done</code>
-  </p>
-  <p>
-    &ecirc;<br>
-    &egrave;<br>
-    &nbsp;<br>
-    &acirc;<br>
-    &icirc;<br>
-    &agrave;<br>
-    &Agrave;<br>
-    &ugrave;<br>
-    &laquo;<br>
-    &raquo;<br>
-  </p>
-  <p>
-  <code>git clone git@provider.com:userName/projectName.git --config core.sshCommand="ssh -i ~/location/to/private_ssh_key"</code><br>
-  <a href="https://stackoverflow.com/questions/41714882/git-how-to-clone-with-ssh-key-username">
-    Git how to clone with SSH key, username
-  </a><br>
-  <p>
-  <a href="https://stackoverflow.com/questions/11200237/how-do-i-get-git-to-default-to-ssh-and-not-https-for-new-repositories">
-    <code>git config --global url.ssh://git@github.com/.insteadOf https://github.com/</code>
-  </a>
-  </p>
-  </p>
+<html><head><title>Scorciatoie utili</title><meta charset="UTF-8"></head><body>
+<a href="#cd">cd</a>
+<a href="#date">date</a>
+<a href="#find">find</a>
+<a href="#grep">grep</a>
+<a href="#less">less</a>
+<a href="#lsof">lsof</a>
+<a href="#sed">sed</a>
+<a href="#wget">wget</a>
+<h1 id="cd">cd</h1>
+<p>
+<code>cd -</code> per tornare nella cartella precedente<br> 
+</p>
+<h1 id="find">find</h1>
+<p>
+<code>find -name parola*</code> per trovare un documento con un nome cominciando con la 
+parola<br>
+<code>find . -type f -newermt 2024-06-04 ! -newermt 2024-06-05 | less</code> per trovare i 
+documenti modificati tra due dati.<br>
+</p>
+<h1 id="grep">grep</h1>
+<p>
+<code>grep -rne parola</code> per trovare tutte le linee dove la parola si trova tra tutti i 
+documenti della cartella e delle ricorsivamente<br> 
+<code>grep -e "parola" &gt; nome-documento.txt</code> per trovare le linee con la parola<br>
+<code>grep -e 2024-01-01 --text /mio/camino/mio-documento.log</code> per mostrare il risultato 
+in testo al terminale.
+</p>
+<h1 id="wget">wget</h1>
+<p>
+<code>wget sito.web</code> per scaricare una pagina web<br>
+<code>wget --no-check-certificate -O - https://facedebouc.sbs</code> per mostare il codice 
+della pagina direttamente alla consola e per ignorare il certificato quando non è buono
+</p>
+<h1 id="less">less</h1>
+<p>
+<code>less +G mio-lungo-log.log</code>
+<code>?parola</code> mentre <code>less</code> è aperto per ricercare nelle linee precedenti
+</p>
+<p>
+Quando c'è questo errore nel terminale 
+<code>Error grabbing logs: invalid character '\x00' looking for beginning of value</code> 
+è possibile di trovare il log cosi 
+<code>sudo docker inspect --format='{{.LogPath}}' mio-contenitore</code> e dopo si usa 
+<code>less +G mio-lungo-log.log</code> per leggere dalla fine.
+</p>
+<h1 id="sed">sed</h1>
+<p>
+Rimpiazare testo con <code>sed</code><br>
+<code>sed -i 's/&amp;eacute;/é/g' nome-documento.txt</code> per rimpiazare <code>&amp;eacute;</code> con é<br> 
+<code>sed -i '/path d/d' nome-documento.txt</code> per rimuovere tutte le linee con «path d»<br> 
+<code>sed -i "s/$(parola)//g" documento.txt</code> per rimuovere la parola in ogni linea<br> 
+<code>sed -i 's/&lt;p&gt;//g' documento.txt</code> per rimuovere <code>&lt;p&gt;</code><br> 
+<code>sed -i 's/&lt;\/p&gt;//g'</code> per rimuovere <code>&lt;/p&gt;</code><br>
+<code>sed -i 's/&lt;p style="text-align: justify;"&gt;//g' documento.txt</code><br> 
+</p>
+<h1 id="date">date</h1>
+<p>Cambiare la data dal terminale : <code>date -s '2024-01-20 20:40:35'</code></p>
+<p>Ottenere un timestamp Unix: <code>date +%s</code></p>
+<p>Ottenere la data da un timestamp Unix: <code>date -d @1763810257</code></p>
+<p>
+Mostrare la data corrente nel terminale : <code>while :; do date; sleep 1; done</code><br>
+Contare nel terminale <code>i=0; while :; do date; sleep 1; echo $i; ((i++)); done</code>
+</p>
+<p>
+&ecirc;<br>
+&egrave;<br>
+&nbsp;<br>
+&acirc;<br>
+&icirc;<br>
+&agrave;<br>
+&Agrave;<br>
+&ugrave;<br>
+&laquo;<br>
+&raquo;<br>
+</p>
+<p>
+<code>git clone git@provider.com:userName/projectName.git --config core.sshCommand="ssh -i ~/location/to/private_ssh_key"</code><br>
+<a href="https://stackoverflow.com/questions/41714882/git-how-to-clone-with-ssh-key-username">
+Git how to clone with SSH key, username
+</a><br>
+<p>
+<a href="https://stackoverflow.com/questions/11200237/how-do-i-get-git-to-default-to-ssh-and-not-https-for-new-repositories">
+<code>git config --global url.ssh://git@github.com/.insteadOf https://github.com/</code>
+</a>
+</p>
+</p>
 </body>
 
 </html>
@@ -91,3 +98,19 @@ sed -i 's/<\/p>//g'
 sed -i 's/<p style="text-align: justify;">//g' documento.txt 
 </xmp>
 
+
+<h1 id="lsof">lsof</h1>
+<p>Vedere le connessione alla rete</p>
+<xmp>
+#!/bin/sh
+echo "---"
+sudo lsof -iUDP | awk 'NR>1 {print $1}' | sort | uniq -c | sort -n
+echo "---"
+sudo lsof -iUDP
+echo "---"
+sudo lsof -iUDP | awk 'NR>1 {print $1}'
+echo "---"
+sudo lsof -iUDP | awk 'NR>1 {print $1}' | sort
+echo "---"
+sudo lsof -iUDP | awk 'NR>1 {print $1}' | sort | uniq -c
+</xmp>
