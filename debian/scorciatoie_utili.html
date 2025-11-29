@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html><head><title>Scorciatoie utili</title><meta charset="UTF-8"></head><body>
 <a href="#cd">cd</a>
+<a href="#cp">cp</a>
 <a href="#date">date</a>
 <a href="#find">find</a>
 <a href="#grep">grep</a>
@@ -11,6 +12,22 @@
 <h1 id="cd">cd</h1>
 <p>
 <code>cd -</code> per tornare nella cartella precedente<br> 
+</p>
+<h1 id="cp">cp</h1>
+<p>Per scrivere un immagine su una carta SD che sarà bootable:
+<xmp>
+# cp debian.iso /dev/sdX
+# sync
+</xmp>
+Non c'è bisogno di altri programmi, perché
+«Debian installation images for this architecture are created using the isohybrid technology»
+<a href="https://d-i.debian.org/manual/en.amd64/ch04s03.html">Preparing a USB stick using a hybrid CD/DVD image</a>.
+Il sito nota «The image must be written to the whole-disk device and not a partition, e.g. /dev/sdb and not /dev/sdb1. Do not use tools like unetbootin which alter the image.»
+</p>
+<p>
+Questo metodo funziona anche per le immagine di tinycorelinux. Ho provato
+<a href="http://tinycorelinux.net/16.x/x86/release/CorePlus-current.iso">CorePlus-current.iso</a>
+che è alla versione 16.2.
 </p>
 <h1 id="find">find</h1>
 <p>
