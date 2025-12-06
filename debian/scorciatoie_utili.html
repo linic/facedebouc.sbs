@@ -4,6 +4,7 @@
 <a href="#cp">cp</a>
 <a href="#date">date</a>
 <a href="#find">find</a>
+<a href="#git">git</a>
 <a href="#grep">grep</a>
 <a href="#less">less</a>
 <a href="#lsof">lsof</a>
@@ -92,12 +93,19 @@ Contare nel terminale <code>i=0; while :; do date; sleep 1; echo $i; ((i++)); do
 &laquo;<br>
 &raquo;<br>
 </p>
+<h1 id="git">git</h1>
 <p>
 <code>git clone git@provider.com:userName/projectName.git --config core.sshCommand="ssh -i ~/location/to/private_ssh_key"</code><br>
 <a href="https://stackoverflow.com/questions/41714882/git-how-to-clone-with-ssh-key-username">
 Git how to clone with SSH key, username
 </a><br>
 <p>
+<p>
+<code>git mergetool</code><br>
+<code>:diffget RE</code><br>
+<code>:diffget LO</code><br>
+<code>git config --global diff.tool vimdiff</code><br>
+</p>
 <a href="https://stackoverflow.com/questions/11200237/how-do-i-get-git-to-default-to-ssh-and-not-https-for-new-repositories">
 <code>git config --global url.ssh://git@github.com/.insteadOf https://github.com/</code>
 </a>
