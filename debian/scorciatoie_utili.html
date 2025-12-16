@@ -9,6 +9,7 @@
 <a href="#less">less</a>
 <a href="#lsof">lsof</a>
 <a href="#sed">sed</a>
+<a href="#vim">vim</a>
 <a href="#wget">wget</a>
 <h1 id="cd">cd</h1>
 <p>
@@ -82,6 +83,7 @@ Mostrare la data corrente nel terminale : <code>while :; do date; sleep 1; done<
 Contare nel terminale <code>i=0; while :; do date; sleep 1; echo $i; ((i++)); done</code>
 </p>
 <p>
+test di caratteri<br>
 &ecirc;<br>
 &egrave;<br>
 &nbsp;<br>
@@ -99,18 +101,20 @@ Contare nel terminale <code>i=0; while :; do date; sleep 1; echo $i; ((i++)); do
 <a href="https://stackoverflow.com/questions/41714882/git-how-to-clone-with-ssh-key-username">
 Git how to clone with SSH key, username
 </a><br>
-<p>
+</p>
+<p><code>git config merge.tool vimdiff</code></p>
+<p><code>git config merge.conflictstyle diff3</code></p>
 <p>
 <code>git mergetool</code><br>
 <code>:diffget RE</code><br>
 <code>:diffget LO</code><br>
 <code>git config --global diff.tool vimdiff</code><br>
 </p>
+<p>
 <a href="https://stackoverflow.com/questions/11200237/how-do-i-get-git-to-default-to-ssh-and-not-https-for-new-repositories">
 <code>git config --global url.ssh://git@github.com/.insteadOf https://github.com/</code>
-</a>
-</p>
-</p>
+</a></p>
+<p><code>git config --global core.editor vim</code></p>
 </body>
 
 </html>
@@ -139,3 +143,10 @@ sudo lsof -iUDP | awk 'NR>1 {print $1}' | sort
 echo "---"
 sudo lsof -iUDP | awk 'NR>1 {print $1}' | sort | uniq -c
 </xmp>
+<h1 id="vim">vim</h1>
+<p><code>gui"</code> in modo normale per ottenere caratteri minuscoli dalla posizione attuale fine all carattere "</p>
+<p><code>g~i"</code> per invertire i minuscoli et maiscoli</p>
+<p><code>t"</code> per muovere al prossimo carattere "</p>
+<p><code>T"</code> per muovere al prossimo carattere "</p>
+<p><code>10@q</code> per eseguire 10 volte il macro q</p>
+<p><code></code></p>
