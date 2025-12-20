@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html><head><title>Scorciatoie utili</title><meta charset="UTF-8"></head><body>
+<a href="#classic_command_line">classic_command_line</a>
+<a href="#powershell">powershell</a>
+<h1 id="classic_command_line">classic_command_line</h1>
+<a href="#netstat">netstat</a>
+<a href="#tasklist">tasklist</a>
+<h2 id="netstat">netstat</h2>
+<p><code>netstat -aon | findstr ":80" | findstr "LISTENING"</code> per trovare il processo che ascolta sulla porta 80</p>
+<h2 id="tasklist">tasklist</h2>
+<p><code>tasklist /svc /FI "PID eq 4"</code> per avere più informazione su il processo</p>
+<h1 id="powershell">powershell</h1>
+<a href="#Get-Process">Get-Process</a>
+<h2 id="Get-Process">Get-Process</h2>
+<p><code>Get-Process -Id (Get-NetTCPConnection -LocalPort 80 - State Listen).OwningProcess</code> per trovare il processo che ascolta sulla porta 80<br></p>
+</body></html>

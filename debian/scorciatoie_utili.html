@@ -11,10 +11,11 @@
 <a href="#sed">sed</a>
 <a href="#vim">vim</a>
 <a href="#wget">wget</a>
+<a href="#html">html</a>
+
 <h1 id="cd">cd</h1>
-<p>
-<code>cd -</code> per tornare nella cartella precedente<br> 
-</p>
+<p><code>cd -</code> per tornare nella cartella precedente<br></p>
+
 <h1 id="cp">cp</h1>
 <p>Per scrivere un immagine su una carta SD che sarà bootable:
 <xmp>
@@ -31,49 +32,7 @@ Questo metodo funziona anche per le immagine di tinycorelinux. Ho provato
 <a href="http://tinycorelinux.net/16.x/x86/release/CorePlus-current.iso">CorePlus-current.iso</a>
 che è alla versione 16.2.
 </p>
-<h1 id="find">find</h1>
-<p>
-<code>find -name parola*</code> per trovare un documento con un nome cominciando con la 
-parola<br>
-<code>find . -type f -newermt 2024-06-04 ! -newermt 2024-06-05 | less</code> per trovare i 
-documenti modificati tra due dati.<br>
-</p>
-<h1 id="grep">grep</h1>
-<p>
-<code>grep -rne parola</code> per trovare tutte le linee dove la parola si trova tra tutti i 
-documenti della cartella e delle ricorsivamente<br> 
-<code>grep -e "parola" &gt; nome-documento.txt</code> per trovare le linee con la parola<br>
-<code>grep -e 2024-01-01 --text /mio/camino/mio-documento.log</code> per mostrare il risultato 
-in testo al terminale.
-</p>
-<h1 id="wget">wget</h1>
-<p>
-<code>wget sito.web</code> per scaricare una pagina web<br>
-<code>wget --no-check-certificate -O - https://facedebouc.sbs</code> per mostare il codice 
-della pagina direttamente alla consola e per ignorare il certificato quando non è buono
-</p>
-<h1 id="less">less</h1>
-<p>
-<code>less +G mio-lungo-log.log</code>
-<code>?parola</code> mentre <code>less</code> è aperto per ricercare nelle linee precedenti
-</p>
-<p>
-Quando c'è questo errore nel terminale 
-<code>Error grabbing logs: invalid character '\x00' looking for beginning of value</code> 
-è possibile di trovare il log cosi 
-<code>sudo docker inspect --format='{{.LogPath}}' mio-contenitore</code> e dopo si usa 
-<code>less +G mio-lungo-log.log</code> per leggere dalla fine.
-</p>
-<h1 id="sed">sed</h1>
-<p>
-Rimpiazare testo con <code>sed</code><br>
-<code>sed -i 's/&amp;eacute;/é/g' nome-documento.txt</code> per rimpiazare <code>&amp;eacute;</code> con é<br> 
-<code>sed -i '/path d/d' nome-documento.txt</code> per rimuovere tutte le linee con «path d»<br> 
-<code>sed -i "s/$(parola)//g" documento.txt</code> per rimuovere la parola in ogni linea<br> 
-<code>sed -i 's/&lt;p&gt;//g' documento.txt</code> per rimuovere <code>&lt;p&gt;</code><br> 
-<code>sed -i 's/&lt;\/p&gt;//g'</code> per rimuovere <code>&lt;/p&gt;</code><br>
-<code>sed -i 's/&lt;p style="text-align: justify;"&gt;//g' documento.txt</code><br> 
-</p>
+
 <h1 id="date">date</h1>
 <p>Cambiare la data dal terminale : <code>date -s '2024-01-20 20:40:35'</code></p>
 <p>Ottenere un timestamp Unix: <code>date +%s</code></p>
@@ -82,19 +41,15 @@ Rimpiazare testo con <code>sed</code><br>
 Mostrare la data corrente nel terminale : <code>while :; do date; sleep 1; done</code><br>
 Contare nel terminale <code>i=0; while :; do date; sleep 1; echo $i; ((i++)); done</code>
 </p>
+
+<h1 id="find">find</h1>
 <p>
-test di caratteri<br>
-&ecirc;<br>
-&egrave;<br>
-&nbsp;<br>
-&acirc;<br>
-&icirc;<br>
-&agrave;<br>
-&Agrave;<br>
-&ugrave;<br>
-&laquo;<br>
-&raquo;<br>
+<code>find -name parola*</code> per trovare un documento con un nome cominciando con la 
+parola<br>
+<code>find . -type f -newermt 2024-06-04 ! -newermt 2024-06-05 | less</code> per trovare i 
+documenti modificati tra due dati.<br>
 </p>
+
 <h1 id="git">git</h1>
 <p>
 <code>git clone git@provider.com:userName/projectName.git --config core.sshCommand="ssh -i ~/location/to/private_ssh_key"</code><br>
@@ -115,9 +70,6 @@ Git how to clone with SSH key, username
 <code>git config --global url.ssh://git@github.com/.insteadOf https://github.com/</code>
 </a></p>
 <p><code>git config --global core.editor vim</code></p>
-</body>
-
-</html>
 
 <xmp>
 grep -e "parola" > nome-documento.txt 
@@ -127,6 +79,27 @@ sed -i 's/<\/p>//g'
 sed -i 's/<p style="text-align: justify;">//g' documento.txt 
 </xmp>
 
+<h1 id="grep">grep</h1>
+<p>
+<code>grep -rne parola</code> per trovare tutte le linee dove la parola si trova tra tutti i 
+documenti della cartella e delle ricorsivamente<br> 
+<code>grep -e "parola" &gt; nome-documento.txt</code> per trovare le linee con la parola<br>
+<code>grep -e 2024-01-01 --text /mio/camino/mio-documento.log</code> per mostrare il risultato 
+in testo al terminale.
+</p>
+
+<h1 id="less">less</h1>
+<p>
+<code>less +G mio-lungo-log.log</code>
+<code>?parola</code> mentre <code>less</code> è aperto per ricercare nelle linee precedenti
+</p>
+<p>
+Quando c'è questo errore nel terminale 
+<code>Error grabbing logs: invalid character '\x00' looking for beginning of value</code> 
+è possibile di trovare il log cosi 
+<code>sudo docker inspect --format='{{.LogPath}}' mio-contenitore</code> e dopo si usa 
+<code>less +G mio-lungo-log.log</code> per leggere dalla fine.
+</p>
 
 <h1 id="lsof">lsof</h1>
 <p>Vedere le connessione alla rete</p>
@@ -143,6 +116,35 @@ sudo lsof -iUDP | awk 'NR>1 {print $1}' | sort
 echo "---"
 sudo lsof -iUDP | awk 'NR>1 {print $1}' | sort | uniq -c
 </xmp>
+
+<h1 id="sed">sed</h1>
+<p>
+Rimpiazare testo con <code>sed</code><br>
+<code>sed -i 's/&amp;eacute;/é/g' nome-documento.txt</code> per rimpiazare <code>&amp;eacute;</code> con é<br> 
+<code>sed -i '/path d/d' nome-documento.txt</code> per rimuovere tutte le linee con «path d»<br> 
+<code>sed -i "s/$(parola)//g" documento.txt</code> per rimuovere la parola in ogni linea<br> 
+<code>sed -i 's/&lt;p&gt;//g' documento.txt</code> per rimuovere <code>&lt;p&gt;</code><br> 
+<code>sed -i 's/&lt;\/p&gt;//g'</code> per rimuovere <code>&lt;/p&gt;</code><br>
+<code>sed -i 's/&lt;p style="text-align: justify;"&gt;//g' documento.txt</code><br> 
+</p>
+
+<h1 id="ssh">ssh</h1>
+<a href="#ssh-config">ssh-config</a>
+<a href="#ssh-keygen">ssh-keygen</a>
+<h2 id="ssh-config">ssh-config</h2>
+<p><code>vim ~/.ssh/config</code> per aggiungere una configurazione speciale come
+<xmp>
+Host gitlab-2
+  HostName gitlab.com
+  IdentityFile ~/.ssh/id_ed25519_gitlab_2.pub
+</xmp>
+che permette di l'errore "Fingerprint sha256 has already been taken" che è causato dall'uso di
+una chiave già usata in un altro conto. Dopo è possibile di eseguire
+<code>git clone git@gitlab-2:utente/repertorio.git</code>
+</p>
+<h2 id="ssh-keygen">ssh-keygen</h2>
+<p><code>ssh-keygen -t ed25519</code> per una nuova chiave ssh</p>
+
 <h1 id="vim">vim</h1>
 <p><code>gui"</code> in modo normale per ottenere caratteri minuscoli dalla posizione attuale fine all carattere "</p>
 <p><code>g~i"</code> per invertire i minuscoli et maiscoli</p>
@@ -150,3 +152,27 @@ sudo lsof -iUDP | awk 'NR>1 {print $1}' | sort | uniq -c
 <p><code>T"</code> per muovere al prossimo carattere "</p>
 <p><code>10@q</code> per eseguire 10 volte il macro q</p>
 <p><code></code></p>
+
+<h1 id="wget">wget</h1>
+<p>
+<code>wget sito.web</code> per scaricare una pagina web<br>
+<code>wget --no-check-certificate -O - https://facedebouc.sbs</code> per mostare il codice 
+della pagina direttamente alla consola e per ignorare il certificato quando non è buono
+</p>
+
+<h1 id="html">html</h1>
+<p>
+test di caratteri<br>
+&ecirc;<br>
+&egrave;<br>
+&nbsp;<br>
+&acirc;<br>
+&icirc;<br>
+&agrave;<br>
+&Agrave;<br>
+&ugrave;<br>
+&laquo;<br>
+&raquo;<br>
+</p>
+
+</body></html>
