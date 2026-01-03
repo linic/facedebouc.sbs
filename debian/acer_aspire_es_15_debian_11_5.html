@@ -1,8 +1,109 @@
 <!DOCTYPE html>
 <html><head><title>Acer Aspire ES 15 et Debian 11.5</title><meta charset="utf-8"></head><body>
+<h1>Acer Aspire ES 15 et Debian 13.2</h1>
+<p>Le Debian 11.5 ne se mettait plus à jour parce qu'il s'était corrompu en essayant de mettre
+à jour le grub. J'ai installé 13.2 qui lui aussi fige à l'installation du grub. J'ai installé
+en mode expert et j'ai démarré le système à partir d'une clé USB Debian 13.2 net install en entrant
+dans la cmd de grub avec la touche 'c' et en entrant les paramètres suivants:
+<code>
+set root=(hd1,gpt2)
+linux /boot/vmlinuz-6.12.57+deb13-amd64 root=/dev=/sda2 ro quiet
+initrd /boot/initrd.img-6.12.57+deb13-amd64
+boot
+</code>
+Dans le système, j'ai installé
+<code>
+# apt install grub-efi-amd64
+</code>
+J'ai ensuite bloqué les mises à jour sur grub-efi-amd64 et ses dépendances
+<code>
+# apt-mark hold efibootmgr \
+                grub-common \
+                grub-efi-amd64 \
+                grub-efi-amd64-bin \
+                grub-efi-amd64-signed \
+                grub-efi-amd64-unsigned \
+                grub2-common \
+                mokutil \
+                shim-helpers-amd64-signed \
+                shim-signed \
+                shim-signed-common \
+                shim-unsigned
+</code>
+J'ai revérifié les blocages avec <code>apt-mark showhold</code>
+Et revérifié encore avec <code>dpkg -l | grep 'grub\|shim'</code>
+</p>
+<p>
+Ensuite j'ai
+<code>
+grub-install \
+  --target=x86_64-efi \
+  --efi-directory=/boot/efi \
+  --boot-directory=/boot \
+  --no-nvram \
+  --removable
+</code>
+Le <code>--removable</code> installe grub à <code>EFI/BOOT/BOOTX64.EFI</code> qui est détecté
+par plusieurs implémentation boguées de UEFI.
+</p>
+<p>
+J'ai fait <code>reboot</code> et je suis tombé dans la ligne de command grub minimale.
+C'est le signe que l'ordi a trouvé <code>BOOTX64.efi</code>.
+De là, j'ai
+<code>
+set root=(hd0,gpt2)
+linux /boot/vmlinuz-6.12.57+deb13-amd64 root=/dev/sda2 ro quiet
+initrd /boot/initrd.img-6.12.57+deb13-amd64
+boot
+</code>
+pour démarrer dans le système. À noter que <code>hd0</code> peut changer.
+Utiliser <code>ls</code> pour trouver le bon disque et la bonne partition.
+</p>
+<p>
+Ensuite, j'ai fait <code>grub-mkconfig -o /boot/grub/grub.cfg</code>. La console m'a affiché
+<code>
+Generating grub configuration file ...
+Found background image: /usr/share/images/desktop-grub.png
+Found linux image: /boot/vmlinuz-6.12.57+deb13-amd64
+Found initrd image: /boot/initrd.img-6.12.57+deb13-amd64
+Warning: os-prober will not be executed to detect other bootable partitions.
+Systems on them will not be added to the GRUB boot configuration.
+Check GRUB_DISABLE_OS_PROBER documentation entry.
+Adding boot menu entry for UEFI Firmware Settings ...
+done
+</code>
+et l'ordi n'a pas gelé. Au redémarrage, debian 13.2 a démarré :)
+</p>
 <h1>Acer Aspire ES 15 et Debian 11.5</h1>
 <p>Published: 2022-10-22T21:12:00.007-04:00</p>
 <div>
-<p>Tout ce que j'ai décrit ici est à vos risques! <br /></p><p>Installer Debian 11.5 sur un Acer Aspire ES 15, c'est comme une quête d'un jeu vidéo pourri produit par Acer avec des énigmes posées par le BIOS qui ne te donne aucune piste pour les résoudre. Je me questionnerai dorénavant avant d'acheter un ordinateur Acer.</p><p>Pour moi, l'installation de <b>Debian 11.5 AMD 64</b> s'est bien passée. J'avais choisi le partionnement par défaut sur un SSD de 128 Go. C'est au redémarrage du système que la quête a commencée.</p><p>Première queète: un message <b>No Boot Device</b> avec une image de disque dur avec un loupe m'apparaît. Je cherche et je tombe sur une procédure qui explique comment réinstaller <b>GRUB 2 </b>et copier à la main un fichier <b>grubx64.efi</b> en <b>bootx64.cfg</b> dans un répertoire <b>/boot/efi/BOOT/</b>. J'ai changé la procédure et la mienne est celle-ci:</p><p></p><ol style="text-align: left;"><li>Démarrer la clé USB <b>Debian 11.5 AMD 64 Net Install</b>.</li><li>Choisir <b>Advanced tools</b>.</li><li>Choisir <b>Rescue Mode</b>.</li><li>Suivre les indications jusqu'à ce que le mode demande de monter une partition root. Il faut choisir celle que l'installeur a créée. Dans mon cas, <b>/dev/sda2</b>.</li><li>Une partition <b>/boot/efi</b> sera détectée et on demandera s'il faut la monter. Choisir de la monter.</li><li>Une fois l'invite de commande atteinte, <b>cd /boot/efi</b>.</li><li>Il devrait y avoid un dossier nommé <b>debian</b>. Utiliser la commande <b>ls</b> pour confirmer.</li><li>Créer un dossier <b>BOOT</b>. EN LETTRE MAJUSCULES!</li><li>Entrer la commande <b>cp debian/* .</b>&nbsp;en étant toujours dans le dossier <b>/boot/efi/BOOT/</b>.</li><li>Créer le fichier <b>bootx64.efi</b>&nbsp;à partir du fichier&nbsp;<b>grubx64.efi</b>&nbsp;avec <b>cp grubx64.efi bootx64.efi</b>.</li></ol><p></p><p>Ensuite, je me retrouve bloqué sur un écran qui affiche <b>Security Boot Fail</b>. Il faut entrer dans le <b>BIOS</b> et mettre un <b>mot de passe administrateur/supervisor password/master password</b>&nbsp;ce qui débloque les options dans une aute page du bios pour désactiver le <b>Secure Boot</b>.</p><p>À partir de ce moment, Debian démarre finalement.</p><p>Pour activer la carte wifi, j'ai dû autoriser les paquets propriétaires en modifiant&nbsp;<b>/etc/apt/sources.list</b>. Il faut commenter les lignes présentes et ajouter les lignes <b>non-free</b> (voir le 3e lien ci-dessous). Le paquet nécessaire est <b>iwlwifi</b>.</p><p>Liens qui m'ont aidés:</p><p></p><ul style="text-align: left;"><li><a href="https://askubuntu.com/questions/862946/unable-to-install-ubuntu-on-acer-aspire-es1-533">https://askubuntu.com/questions/862946/unable-to-install-ubuntu-on-acer-aspire-es1-533</a></li><li><a href="https://community.acer.com/en/discussion/comment/520316/#Comment_520316">https://community.acer.com/en/discussion/comment/520316/#Comment_520316</a></li><li><a href="https://wiki.debian.org/SourcesList">https://wiki.debian.org/SourcesList</a></li><li><a href="https://wiki.debian.org/iwlwifi">https://wiki.debian.org/iwlwifi</a></li></ul><p>Mise à jour 2023-09-08: un sudo apt-get dist-upgrade peut briser grub. Pour s'en sortir, à l'invite de commande du grub:<br /></p><p>set root=(hd0, gpt2)<br />set prefix=(hd0, gpt2)/boot/grub<br />insmod normal<br />normal<br /></p><p>J'ai compris ceci en lisant entre autre ce site https://copyprogramming.com/tutorial/what-to-do-when-i-get-an-attempt-to-read-or-write-outside-of-disk-hd0-error-and-boot-repair-does-not-solve-the-problem&nbsp; <br /></p><p></p>
-</div></body>
+<p>Tout ce que j'ai décrit ici est à vos risques! <br /></p>
+<p>Installer Debian 11.5 sur un Acer Aspire ES 15, c'est comme une quête d'un jeu vidéo pourri produit par Acer avec des énigmes posées par le BIOS qui ne te donne aucune piste pour les résoudre. Je me questionnerai dorénavant avant d'acheter un ordinateur Acer.</p>
+<p>Pour moi, l'installation de <b>Debian 11.5 AMD 64</b> s'est bien passée. J'avais choisi le partionnement par défaut sur un SSD de 128 Go. C'est au redémarrage du système que la quête a commencée.</p>
+<p>Première queète: un message <b>No Boot Device</b> avec une image de disque dur avec un loupe m'apparaît. Je cherche et je tombe sur une procédure qui explique comment réinstaller <b>GRUB 2 </b>et copier à la main un fichier <b>grubx64.efi</b> en <b>bootx64.cfg</b> dans un répertoire <b>/boot/efi/BOOT/</b>. J'ai changé la procédure et la mienne est celle-ci:</p>
+<p></p>
+<ol style="text-align: left;">
+<li>Démarrer la clé USB <b>Debian 11.5 AMD 64 Net Install</b>.</li>
+<li>Choisir <b>Advanced tools</b>.</li>
+<li>Choisir <b>Rescue Mode</b>.</li>
+<li>Suivre les indications jusqu'à ce que le mode demande de monter une partition root. Il faut choisir celle que l'installeur a créée. Dans mon cas, <b>/dev/sda2</b>.</li>
+<li>Une partition <b>/boot/efi</b> sera détectée et on demandera s'il faut la monter. Choisir de la monter.</li>
+<li>Une fois l'invite de commande atteinte, <b>cd /boot/efi</b>.</li>
+<li>Il devrait y avoid un dossier nommé <b>debian</b>. Utiliser la commande <b>ls</b> pour confirmer.</li>
+<li>Créer un dossier <b>BOOT</b>. EN LETTRE MAJUSCULES!</li>
+<li>Entrer la commande <b>cp debian/* .</b>&nbsp;en étant toujours dans le dossier <b>/boot/efi/BOOT/</b>.</li>
+<li>Créer le fichier <b>bootx64.efi</b>&nbsp;à partir du fichier&nbsp;<b>grubx64.efi</b>&nbsp;avec <b>cp grubx64.efi bootx64.efi</b>.</li></ol><p></p>
+<p>Ensuite, je me retrouve bloqué sur un écran qui affiche <b>Security Boot Fail</b>. Il faut entrer dans le <b>BIOS</b> et mettre un <b>mot de passe administrateur/supervisor password/master password</b>&nbsp;ce qui débloque les options dans une aute page du bios pour désactiver le <b>Secure Boot</b>.</p>
+<p>À partir de ce moment, Debian démarre finalement.</p>
+<p>Pour activer la carte wifi, j'ai dû autoriser les paquets propriétaires en modifiant&nbsp;<b>/etc/apt/sources.list</b>. Il faut commenter les lignes présentes et ajouter les lignes <b>non-free</b> (voir le 3e lien ci-dessous). Le paquet nécessaire est <b>iwlwifi</b>.</p>
+<p>Liens qui m'ont aidés:</p>
+<p></p><ul style="text-align: left;"><li><a href="https://askubuntu.com/questions/862946/unable-to-install-ubuntu-on-acer-aspire-es1-533">https://askubuntu.com/questions/862946/unable-to-install-ubuntu-on-acer-aspire-es1-533</a></li>
+<li><a href="https://community.acer.com/en/discussion/comment/520316/#Comment_520316">https://community.acer.com/en/discussion/comment/520316/#Comment_520316</a></li>
+<li><a href="https://wiki.debian.org/SourcesList">https://wiki.debian.org/SourcesList</a></li>
+<li><a href="https://wiki.debian.org/iwlwifi">https://wiki.debian.org/iwlwifi</a></li></ul><p>Mise à jour 2023-09-08: un sudo apt-get dist-upgrade peut briser grub. Pour s'en sortir, à l'invite de commande du grub:<br /></p>
+<p>set root=(hd0, gpt2)<br />set prefix=(hd0, gpt2)/boot/grub<br />insmod normal<br />normal<br /></p>
+<p>J'ai compris ceci en lisant entre autre ce site https://copyprogramming.com/tutorial/what-to-do-when-i-get-an-attempt-to-read-or-write-outside-of-disk-hd0-error-and-boot-repair-does-not-solve-the-problem&nbsp; <br /></p>
+<p></p>
+</div>
+</body>
 </html>
