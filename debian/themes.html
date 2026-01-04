@@ -1,27 +1,48 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-  <title>temi</title>
-  <meta charset="UTF-8">
-</head>
-
-<body>
-  <h1>Come cambiare il tema di Debian Mate?</h1>
-  <p>
-    Ci sono parecchi temi qui <code>/usr/share/themes/</code>. È possibile di copiare una cartella 
-    come <code>sudo cp -r WinMe WinMe2</code> e di modificare il documento <code>.xml</code> che 
-    definisce i colori.
-  </p>
-  <p>
-    :%s/526bad/f4af00/g
-    :%s/0a246a/6b1b09/g
-    :%s/94b5dc/dbc092/g
-    :%s/a6caf0/efd1a5/g
-    :%s/gtk:bg[NORMAL]/#c6c4c0/g
-    :%s/ffffff/dddddd/g
-  </p>
-</body>
-
-</html>
-
+<html><head><title>temi</title><meta charset="UTF-8"></head><body>
+<a href="#temi_inclusi">Temi inclusi</a>,
+<a href="#themes">.themes</a>,
+<a href="#icons">.icons</a>
+<h1 id="temi_inclusi">Come cambiare il tema di Debian Mate?</h1>
+<p>
+Ci sono parecchi temi qui <code>/usr/share/themes/</code>. È possibile di copiare una cartella 
+come <code>sudo cp -r WinMe WinMe2</code> e di modificare il documento <code>.xml</code> che 
+definisce i colori.
+</p>
+<p>
+Scorciatoie vim uitili per cambiare i colori:
+<xmp>
+:%s/526bad/f4af00/g
+:%s/0a246a/6b1b09/g
+:%s/94b5dc/dbc092/g
+:%s/a6caf0/efd1a5/g
+:%s/gtk:bg[NORMAL]/#c6c4c0/g
+:%s/ffffff/dddddd/g
+</xmp>
+</p>
+<h1 id="themes">Aggiungere temi</h1>
+<p>Aggiungere temi scaricandoli e mettendoli nel repertorio <code>~/.themes</code></p>
+<p>
+Esempio con
+<a href="https://github.com/B00merang-Project/Windows-XP">B00merang-Project/Windows-XP</a>
+<xmp>
+cd ~./themes
+git clone https://github.com/B00merang-Project/Windows-XP.git
+cd Windows-XP
+mv * ..
+</xmp>
+e dopo andare nelle preferenze di aspetto di Mate e scegliere uno dei temi.
+</p>
+<p>Nota: senza il pachetto corrispondente alle icone, Mate informera che il tema non sarà completo.</p>
+<h1 id="icons">Aggiungere icone</h1>
+<p>Aggiungere icone scaricandole e mettendole nel repertorio <code>~/.icons</code></p>
+<p>
+Esempio con
+<a href="https://github.com/B00merang-Artwork/Windows-XP">B00merang-Artwork/Windows-XP</a>
+<xmp>
+cd ~./icons
+git clone https://github.com/B00merang-Artwork/Windows-XP.git
+</xmp>
+e dopo andare nelle preferenze di aspetto di Mate e modificare in tema corrente per usarele.
+</p>
+</body></html>
