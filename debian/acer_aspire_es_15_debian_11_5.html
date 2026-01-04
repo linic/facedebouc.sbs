@@ -5,19 +5,19 @@
 à jour le grub. J'ai installé 13.2 qui lui aussi fige à l'installation du grub. J'ai installé
 en mode expert et j'ai démarré le système à partir d'une clé USB Debian 13.2 net install en entrant
 dans la cmd de grub avec la touche 'c' et en entrant les paramètres suivants:
-<xmp>
+<code><pre>
 set root=(hd1,gpt2)
 linux /boot/vmlinuz-6.12.57+deb13-amd64 root=/dev=/sda2 ro quiet
 initrd /boot/initrd.img-6.12.57+deb13-amd64
 boot
-</xmp>
-Dans le système, j'ai installé
+</pre></code>
+Dans le système, connecté en tant que root, j'ai installé
 <code>
-# apt install grub-efi-amd64
+apt install grub-efi-amd64
 </code>
 J'ai ensuite bloqué les mises à jour sur grub-efi-amd64 et ses dépendances
-<xmp>
-# apt-mark hold efibootmgr \
+<code><pre>
+apt-mark hold efibootmgr \
                 grub-common \
                 grub-efi-amd64 \
                 grub-efi-amd64-bin \
@@ -29,20 +29,20 @@ J'ai ensuite bloqué les mises à jour sur grub-efi-amd64 et ses dépendances
                 shim-signed \
                 shim-signed-common \
                 shim-unsigned
-</xmp>
+</pre></code>
 J'ai revérifié les blocages avec <code>apt-mark showhold</code>
 Et revérifié encore avec <code>dpkg -l | grep 'grub\|shim'</code>
 </p>
 <p>
 Ensuite j'ai
-<xmp>
+<code><pre>
 grub-install \
   --target=x86_64-efi \
   --efi-directory=/boot/efi \
   --boot-directory=/boot \
   --no-nvram \
   --removable
-</xmp>
+</pre></code>
 Le <code>--removable</code> installe grub à <code>EFI/BOOT/BOOTX64.EFI</code> qui est détecté
 par plusieurs implémentation boguées de UEFI.
 </p>
@@ -50,18 +50,18 @@ par plusieurs implémentation boguées de UEFI.
 J'ai fait <code>reboot</code> et je suis tombé dans la ligne de command grub minimale.
 C'est le signe que l'ordi a trouvé <code>BOOTX64.efi</code>.
 De là, j'ai
-<xmp>
+<code><pre>
 set root=(hd0,gpt2)
 linux /boot/vmlinuz-6.12.57+deb13-amd64 root=/dev/sda2 ro quiet
 initrd /boot/initrd.img-6.12.57+deb13-amd64
 boot
-</xmp>
+</pre></code>
 pour démarrer dans le système. À noter que <code>hd0</code> peut changer.
 Utiliser <code>ls</code> pour trouver le bon disque et la bonne partition.
 </p>
 <p>
 Ensuite, j'ai fait <code>grub-mkconfig -o /boot/grub/grub.cfg</code>. La console m'a affiché
-<xmp>
+<code><pre>
 Generating grub configuration file ...
 Found background image: /usr/share/images/desktop-grub.png
 Found linux image: /boot/vmlinuz-6.12.57+deb13-amd64
@@ -71,7 +71,7 @@ Systems on them will not be added to the GRUB boot configuration.
 Check GRUB_DISABLE_OS_PROBER documentation entry.
 Adding boot menu entry for UEFI Firmware Settings ...
 done
-</xmp>
+</pre></code>
 et l'ordi n'a pas gelé. Au redémarrage, debian 13.2 a démarré :)
 </p>
 <p>Note 1: Pour une certaine raison, l'ordi prend plusieurs secondes après avoir pesé le bouton
