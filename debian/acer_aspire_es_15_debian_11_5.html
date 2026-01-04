@@ -74,6 +74,17 @@ done
 </code>
 et l'ordi n'a pas gelé. Au redémarrage, debian 13.2 a démarré :)
 </p>
+<p>Note 1: Pour une certaine raison, l'ordi prend plusieurs secondes après avoir pesé le bouton
+d'allumage pour montrer le logo d'Acer. Je pèse ESC plusieurs fois pendant ce temps dans l'espoir
+que ça démarre plus vite, mais je ne sais pas si c'est utile.</p>
+<p>Note 2: J'ai trouvé à <code>/boot/efi/</code> plusieurs fichiers <code>FSCK000000001.REC</code>
+que je pense être des «file system checks» qui ont été créés lorsque j'ai essayé d'installer
+debian normalement avec le support net install et que grub essayait de s'installer et gelait
+l'ordi. Je les ai effacés et tout a continué à fonctionner.</p>
+<p>Note 3: Pour une raison que j'ignore le voyant DEL indiquant que l'ordinateur est allumé reste
+allumé après avoir cliqué pour éteindre linux. Linux est cependant bien éteint. Je pense qu'il y
+a un bogue au niveau de l'ACPI. Je maintient le bouton d'allumage pendant les secondes nécessaires
+pour éteindre de force l'ordi. Comme dans le bon vieux temps quand il n'y avait pas d'ACPI :)</p>
 <h1>Acer Aspire ES 15 et Debian 11.5</h1>
 <p>Published: 2022-10-22T21:12:00.007-04:00</p>
 <div>
