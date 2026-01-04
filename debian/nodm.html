@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html><head><title>nodm</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è <code>nodm</code>?</h1>
+<p>
+<code>nodm</code> è un'alternativa a <code>lightdm</code>. Sono due «desktop managers».
+</p>
+<p>
+Per passare da <code>lightdm</code> a <code>nodm</code>, con permissione root, nel terminal : 
+<code><pre>
+sudo apt update
+sudo apt install nodm
+sudo systemctl disable lightdm
+sudo systemctl stop lightdm
+sudo apt purge lightdm
+sudo vim /etc/default/nodm
+</pre></code>
+scrivendo questo nel file
+<code><pre>
+NODM_ENABLED=true
+NODM_USER=utente
+NODM_XSESSION=/etc/X11/Xsession
+NODM_MIN_SESSION_TIME=60
+</pre></code>
+continuando con
+<code><pre>
+cat /etc/X11/Xwrapper.config
+</pre></code>
+per verificare che <code>allowed_users=console</code> è presente.
+Continuare con
+<code><pre>
+sudo dpkg-reconfigure nodm
+sudo systemctl enable nodm
+vim /home/utente/.xsession
+</pre></code>
+e scrivendo
+<code><pre>
+exec mate-session
+</pre></code>
+per finire con
+<code><pre>
+chmod +x /home/utente/.xsession
+chown utente:utente /home/utente/.xsession
+</pre></code>
+e finalement <code>reboot</code>.
+</p>
+<p>Nota 1: ho usato questo metodo con Debian 13.2.</p>
+<p>Nota 2: il comportamento quando si ferma il computer è un poco strano perché nodm riavvia X
+mentre linux si sta fermando.</p>
+<p>Nota 3: <code>gdm</code> sopporte un «autologin» e più funzionalita che <code>nodm</code>
+ma non l'ho provato.</p>
+</body></html>
