@@ -79,6 +79,21 @@ git mergetool
 </a></p>
 <p><code>git config --global core.editor vim</code> per l'editore dei commit</p>
 <p><code>git diff --cached staged-file.txt</code> per vedere i cambiamenti su un documento cambiato già aggiunto.</p>
+<p>
+Se usi più di un'identità su gitlab:
+<code><pre>
+git remote -v
+git remote set-url origin git@gitlab1<il-resto-del-url-git>
+vim ~/.ssh/config
+:set paste
+i
+Host gitlab1
+	HostName gitlab.com
+	User git
+	IdentityFile ~/.ssh/id_ed25519_gitlab1
+	IdentitiesOnly yes
+</pre></code>
+</p>
 
 <h1 id="grep">grep</h1>
 <p>
