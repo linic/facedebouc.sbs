@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html><head><title>Scorciatoie utili</title><meta charset="UTF-8"></head><body>
+<a href="#cat">cat</a>
 <a href="#cd">cd</a>
 <a href="#cp">cp</a>
 <a href="#date">date</a>
@@ -12,6 +13,9 @@
 <a href="#vim">vim</a>
 <a href="#wget">wget</a>
 <a href="#html">html</a>
+
+<h1 id="cd">cd</h1>
+<p>Per <code>cat</code> vedere il suo uso con <a href="./mkfifo.html"><code>mkfifo</code></a></p>
 
 <h1 id="cd">cd</h1>
 <p><code>cd -</code> per tornare nella cartella precedente<br></p>
@@ -57,27 +61,24 @@ documenti modificati tra due dati.<br>
 Git how to clone with SSH key, username
 </a><br>
 </p>
-<p><code>git config merge.tool vimdiff</code></p>
-<p><code>git config merge.conflictstyle diff3</code></p>
 <p>
-<code>git mergetool</code><br>
-<code>:diffget RE</code><br>
-<code>:diffget LO</code><br>
-<code>git config --global diff.tool vimdiff</code><br>
+Per configurare l'editore per conflitti e risorvarli :
+<code><pre>
+git config merge.tool vimdiff
+git config merge.conflictstyle diff3
+git config --global diff.tool vimdiff
+git mergetool
+:diffget RE
+:diffget LO
+</pre></code>
 </p>
+<p><code>git clean -i a/b/*</code> per rimuovere i documenti temporanei</p>
 <p>
 <a href="https://stackoverflow.com/questions/11200237/how-do-i-get-git-to-default-to-ssh-and-not-https-for-new-repositories">
 <code>git config --global url.ssh://git@github.com/.insteadOf https://github.com/</code>
 </a></p>
-<p><code>git config --global core.editor vim</code></p>
-
-<xmp>
-grep -e "parola" > nome-documento.txt 
-sed -i 's/&eacute;/é/g' nome-documento.txt 
-sed -i 's/<p>//g' documento.txt 
-sed -i 's/<\/p>//g' 
-sed -i 's/<p style="text-align: justify;">//g' documento.txt 
-</xmp>
+<p><code>git config --global core.editor vim</code> per l'editore dei commit</p>
+<p><code>git diff --cached staged-file.txt</code> per vedere i cambiamenti su un documento cambiato già aggiunto.</p>
 
 <h1 id="grep">grep</h1>
 <p>
@@ -86,6 +87,23 @@ documenti della cartella e delle ricorsivamente<br>
 <code>grep -e "parola" &gt; nome-documento.txt</code> per trovare le linee con la parola<br>
 <code>grep -e 2024-01-01 --text /mio/camino/mio-documento.log</code> per mostrare il risultato 
 in testo al terminale.
+</p>
+<p>Per rimpiazare html e mantenere solo il testo
+<xmp>
+grep -e "parola" > documento.txt
+sed -i 's/&eacute;/é/g' documento.txt
+sed -i 's/<p>//g' documento.txt
+sed -i 's/<\/p>//g'
+sed -i 's/<p style="text-align: justify;">//g' documento.txt
+</xmp>
+</p>
+<p>Per terminare un processo cercato da nome<br>
+<code><pre>
+kill `ps aux | grep "telnet" | head -n 1 | tr -s ' ' | cut -d' ' -f2`
+</pre></code>
+<code>head -n 1</code> - ritorna la prima linea
+<code>tr -s ' '</code> - rimpiaza catene di spazi in uno spazio
+<code>cut -d' ' -f2</code> - taglia la linea usando il spazio come separatóre
 </p>
 
 <h1 id="less">less</h1>

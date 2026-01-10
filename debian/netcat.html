@@ -1,47 +1,39 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-  <title>netcat o nc</title>
-  <meta charset="UTF-8">
-</head>
-
-<body>
-  <h1>Cos'è <code>netcat</code>?</h1>
-  <p>
-    <code>netcat</code> è un commando che permette di mandare dati da un computer ad un altro.
-  </p>
-  <p>
-    Per esempio, nel terminal Debian/Linux del computer che riceve : 
-    <code>
-<pre>
+<html><head><title>netcat o nc</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è <code>netcat</code>?</h1>
+<p>
+<code>netcat</code> è un commando che permette di mandare dati da un computer ad un altro.
+</p>
+<p>
+Per esempio, nel terminal Debian/Linux del computer che riceve :
+<code><pre>
 nc -l -p 11444 &gt; documento.tar &lt; /dev/null
-</pre>
-    </code>
-  </p>
-  <p>
-    Dopo, nel terminal Debian/Linux del computer che trasmette  : 
-    <code>
-<pre>
+</pre></code>
+</p>
+<p>
+Dopo, nel terminal Debian/Linux del computer che trasmette:
+<code><pre>
 tar -cvf ~/documento.tar *
 cat documento.tar | netcat 192.168.0.2 11444
-</pre>
-    </code>
-  </p>
-  <p>
-    Premere CTRL + C on ogni computer quando la quantità di dati è stata mandata perché i 
-    commandi non si fermeranno.
-  </p>
-</body>
-
-</html>
-
-<xmp>
-ricevere:
-nc -l -p 11444 > documento.tar < /dev/null
-
-trasmettere:
+</pre></code>
+</p>
+<p>
+Premere CTRL + C on ogni computer quando la quantità di dati è stata mandata perché i 
+commandi non si fermeranno.
+</p>
+<p>
+A volte, la disconnessione arriva prima della fine del trasferimento del documento. Allora è
+meglio di usare:
+<code><pre>
+nc -l -p 11444 > documento.tar
+</pre></code>
+e
+<code><pre>
 tar -cvf ~/documento.tar *
 cat documento.tar | netcat 192.168.0.2 11444
-</xmp>
+</pre></code>
+e di chiudere <code>nc</code> con CTRL+C dopo di avere verificato il file con <code>md5sum</code>
+o <code>sha512sum</code>.
+</p>
+</body></html>
 

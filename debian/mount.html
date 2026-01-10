@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html><head><title>mount</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è <code>mount</code>?</h1>
+<p>
+<code>mount</code> permette di accedere a i dati di un disco o di un immagine di disco.
+Un esempio pratico, usare
+<a href="#mount">mount</a> per montare una partizione in un'immagine di disco, usare
+<a href="#fdisk">fdisk</a> per calcolare la posizione della partizione nell'immagine, usare
+<a href="#dd">dd</a> per salvaguardare un disco in un'immagine.
+</p>
+<p id="mount">
+Per montare una partizione in un'immagine di disco : 
+<code><pre>
+mkdir ~/disco-montato
+sudo mount -o loop,offset=537919488 disco.dd ~/disco-montato
+</pre></code>
+</p>
+<p id="fdisk">
+Per calcolare la posizione della partizione nell'immagine da montare : 
+<code><pre>
+sudo fdisk -l disco.dd
+</pre></code>
+che produrrà un'uscita simile a questa
+<code><pre>
+# Mauvaise concordance des tailles de partition du secteur d'amorçage GPT (234441647 != 234881023), elles seront corrigées par l'écriture.
+# La table GPT de sauvegarde n'est pas à la fin du périphérique.
+# Disque 2025-12-21_acer_es15_es1-533-p205_nonna.dd : 112 GiB, 120259084288 octets, 234881024 secteurs
+# Unités : secteur de 1 × 512 = 512 octets
+# Taille de secteur (logique / physique) : 512 octets / 512 octets
+# taille d'E/S (minimale / optimale) : 512 octets / 512 octets
+# Type d'étiquette de disque : gpt
+# Identifiant de disque : 4486B802-A49D-4EB6-9D74-48BBEC9DA947
+#
+#Périphérique                                    Début       Fin  Secteurs Taille Type
+#disco.dd1      2048   1050623   1048576   512M Système EFI
+#disco.dd2   1050624 232441855 231391232 110,3G Système de fichiers Linux
+#disco.dd3 232441856 234440703   1998848   976M Partition d'échange Linux
+</pre></code>
+Notare il offset della partizione e moltiplicare con la dimensione di un settore.
+Per esempio 1050624 * 512 = 537919488 per la seconda partizione.
+</p>
+<p id="dd">
+Per salvare un disco in un'immagine disco : 
+<code><pre>
+sudo dd if=/dev/sdb of=disco.dd conv=sync,noerror bs=512M status=progress
+sha512sum disco.dd > disco.dd.sha512.txt
+</pre></code>
+</p>
+</body></html>

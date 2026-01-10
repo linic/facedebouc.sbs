@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html><head><title>iptables</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è <code>iptables</code>?</h1>
+<p>
+<code>iptables</code> permette di configurare un parafuoco e NAT.
+</p>
+<p>
+Per esempio, nel terminal Debian/Linux, questo permette di usare l'internet
+di un interfaccia wifi verso un interfaccia a cavio : 
+<code><pre>
+sudo vim /etc/sysctl.conf
+i
+net.ipv4.ip_forward=1
+:wq
+sudo sysctl -p
+sudo vim /etc/network/interfaces
+:set paste
+i
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source /etc/network/interfaces.d/*
+auto enp0s25
+iface enp0s25 inet static
+    address 192.168.91.1
+    netmask 255.255.255.0
+    network 192.168.91.0
+    broadcast 192.168.91.255
+:wq
+sudo apt install iptables
+sudo apt install iptables-persistent
+sudo iptables -t nat -A POSTROUTING -o wlp3s0 -j MASQUERADE
+sudo iptables -A FORWARD -i enp0s25 -o wlp3s0 -j ACCEPT
+sudo iptables -A FORWARD -i wlp3s0 -o enp0s25 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo netfilter-persistent save
+sudo systemctl restart networking
+sudo apt install isc-dhcp-server
+sudo vim /etc/dhcp/dhcpd.conf
+i
+subnet 192.168.1.0 netmask 255.255.255.0 {
+    range 192.168.91.100 192.168.91.200;
+    option routers 192.168.91.1;
+    option domain-name-servers 8.8.8.8, 8.8.4.4;
+}
+:wq
+sudo vim /etc/default/isc-dhcp-server
+sudo systemctl restart isc-dhcp-server
+i
+# Defaults for isc-dhcp-server (sourced by /etc/init.d/isc-dhcp-server)
+
+# Path to dhcpd's config file (default: /etc/dhcp/dhcpd.conf).
+#DHCPDv4_CONF=/etc/dhcp/dhcpd.conf
+#DHCPDv6_CONF=/etc/dhcp/dhcpd6.conf
+
+# Path to dhcpd's PID file (default: /var/run/dhcpd.pid).
+#DHCPDv4_PID=/var/run/dhcpd.pid
+#DHCPDv6_PID=/var/run/dhcpd6.pid
+
+# Additional options to start dhcpd with.
+#       Don't use options -cf or -pf here; use DHCPD_CONF/ DHCPD_PID instead
+#OPTIONS=""
+
+# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
+#       Separate multiple interfaces with spaces, e.g. "eth0 eth1".
+INTERFACESv4="enp0s25"
+INTERFACESv6=""
+:wq
+systemctl status isc-dhcp-server.service
+sudo systemctl enable isc-dhcp-server
+sudo systemctl restart isc-dhcp-server
+less /var/log/journal/7b1aa93bc247436a93808d8f80b9e6e5/
+sudo journalctl
+sudo dmesg
+</pre></code>
+</p>
+<p>
+Per rimuovere la configurazione precedente:
+<code><pre>
+sudo systemctl disable isc-dhcp-server
+sudo apt purge isc-dhcp-server
+sudo iptables -D FORWARD 1
+sudo iptables -D FORWARD 1
+sudo iptables -L -v
+sudo iptables -t nat -D POSTROUTING 1
+sudo iptables -t nat -L
+sudo netfilter-persistent save
+sudo vim /etc/network/interfaces
+d99d
+:set paste
+i
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source /etc/network/interfaces.d/*
+auto enp0s25
+#iface enp0s25 inet static
+#    address 192.168.91.1
+#    netmask 255.255.255.0
+#    network 192.168.91.0
+#    broadcast 192.168.91.255
+:wq
+sudo vim /etc/sysctl.conf
+/net.ipv4.ip_forward
+i
+#
+:wq
+sudo sysctl -p
+sudo systemctl restart networking
+sudo reboot
+</pre></code>
+Non fa niente se il <code>sudo systemctl restart networking</code> finisce in errore
+(<a href="#nota2">Nota 2</a>). Dopo il <code>reboot</code>, verificare altre opzioni configurate
+nelle opzioni di rete grafiche (facendo <code>startx</code> se non c'è un desktop manager). Se
+c'erano altre cose da configurare li, disconnettere il cavio ethernet per 10 secondi e
+riconnetterlo. Usare <code>ip address</code> per confermare l'indirizzo IP. Usare un navigatore
+internet per confermare l'accesso a internet.
+</p>
+<p>
+Nota 1:
+<code><pre>
+isc-dhcp-server.service is not a native service, redirecting to systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install disable isc-dhcp-server
+</pre></code>
+</p>
+<p id="nota2">
+Nota 2:
+<code><pre>
+sudo systemctl restart networking
+Job for networking.service failed because the control process exited with error code.
+See "systemctl status networking.service" and "journalctl -xeu networking.service" for details.
+</pre></code>
+</p>
+</body></html>

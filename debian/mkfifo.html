@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html><head><title>mkfifo</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è <code>mkfifo</code>?</h1>
+<p>
+<code>mkfifo</code> per creare un «tubo» nominato.
+</p>
+<p>
+Per ascoltare dal tubo :
+<code><pre>
+mkfifo tubo
+cat < tubo
+</pre></code>
+Con questo, il shell apre il tubo in lettura e lo connette allo <code>stdin</code> di <code>cat</code><br>
+C'è un'altro modo per leggere dal tubo :
+<code><pre>
+cat tubo
+</pre></code>
+Con questo, <code>cat</code> apre il tubo in lettura.
+Per scrivere nel tubo :
+<code><pre>
+echo "cosa" >> tubo
+</pre></code>
+</p>
+<p>
+<code>cat</code> esce subito quando l'ultimo processo che scrive si chiude. Per farlo rimanere aperto :<br>
+<code><pre>
+cat 0<> tubo
+</pre></code>
+Se ho capito bene, il shell apre il tubo per scrittura e lettura e connette il stdin e il stdout al tubo.
+Facendo questo, il tubo non si chiuderà mai; non ci sarà mai un EOF.
+</p>
+<p>
+Per più informazione :<br>
+<a href="https://unix.stackexchange.com/questions/392697/reading-a-named-pipe-tail-or-cat">unix.stackexchange.com - reading a named pipe, tail or cat</a><br>
+<a href="https://www.howtogeek.com/438882/how-to-use-pipes-on-linux/">howtogeek - how to use pipes on linux</a><br>
+</p>
+</body></html>
