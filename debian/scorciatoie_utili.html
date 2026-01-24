@@ -2,6 +2,7 @@
 <html><head><title>Scorciatoie utili</title><meta charset="UTF-8"></head><body>
 <a href="#cat">cat</a>
 <a href="#cd">cd</a>
+<a href="#comm">comm</a>
 <a href="#cp">cp</a>
 <a href="#date">date</a>
 <a href="#find">find</a>
@@ -14,11 +15,29 @@
 <a href="#wget">wget</a>
 <a href="#html">html</a>
 
-<h1 id="cd">cd</h1>
+<h1 id="cat">cat</h1>
 <p>Per <code>cat</code> vedere il suo uso con <a href="./mkfifo.html"><code>mkfifo</code></a></p>
 
 <h1 id="cd">cd</h1>
 <p><code>cd -</code> per tornare nella cartella precedente<br></p>
+
+<h1 id="comm">comm</h1>
+<p>
+Vedere le differenze tra due liste ordinate:
+<xmp>
+comm -23 <(sort <(git-lfs ls-files | cut -d' ' -f3 | cut -d'/' -f4)) <(sort <(find -name *.tcz | cut -d'/' -f5))
+comm -13 <(sort <(git-lfs ls-files | cut -d' ' -f3 | cut -d'/' -f4)) <(sort <(find -name *.tcz | cut -d'/' -f5))
+ca-certificates.tcz
+curl.tcz
+gcc_libs.tcz
+libzstd.tcz
+openssl.tcz
+tce-load-github-lfs.tcz
+</xmp>
+<code>comm -12</code> per le similitudini tra due liste</br>
+<code>comm -13</code> per gli elementi unichi alla seconda lista</br>
+<code>comm -23</code> per gli elementi unichi alla prima lista</br>
+</p>
 
 <h1 id="cp">cp</h1>
 <p>Per scrivere un immagine su una carta SD che sarà bootable:
