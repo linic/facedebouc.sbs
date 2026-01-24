@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html><head><title>Trasporto UDP</title><meta charset="UTF-8"></head><body>
+<h1>Cos'è il trasporto UDP?</h1>
+<p>
+Il trasporto UDP permette di mandare dati tra due programmi.
+</p>
+<p>
+Per ascoltare pacchetti UDP con powershell:
+<code><pre>
+$ipLocale  = [System.Net.IPAddress]::Parse("192.168.111.111")
+$porta     = 8888
+
+$puntoDiFine = New-Object System.Net.IPEndPoint($ipLocale, $port)
+$ascoltatoreUdp     = New-Object System.Net.Sockets.UdpClient($puntoDiFine)
+
+Write-Host "Ascoltando pacchetti UDP sulla porta $($ipLocale):$porta (Ctrl+C to stop)"
+
+while ($true) {
+    $remoteEndPoint = New-Object System.Net.IPEndPoint([System.Net.IPAddress]::Any, 0)
+    $bytes = $ascoltatoreUdp.Receive([ref]$remoteEndPoint)
+
+    $testo  = [System.Text.Encoding]::UTF8.GetString($bytes)
+    Write-Host "Da $($remoteEndPoint.Address):$($remoteEndPoint.Port) $testo"
+}
+</pre></code>
+</p>
+<p>
+Per mandare pacchetti UDP con powershell:
+<code><pre>
+$ipRemoto   = "192.168.111.111"
+$portaRemota = 8888
+$messaggio    = "hello"
+
+$udp = New-Object System.Net.Sockets.UdpClient
+$bytes = [System.Text.Encoding]::ASCII.GetBytes($messaggio)
+[void]$udp.Send($bytes, $bytes.Length, $ipRemoto, $portaRemota)
+$udp.Close()
+</pre></code>
+</p>
+<p>
+Per mandare pacchetti UDP con sh su Linux:
+<code><pre>
+#!/bin/sh
+echo -n "hello" > /dev/udp/192.168.111.111/8888
+</pre></code>
+</p>
+</body></html>
