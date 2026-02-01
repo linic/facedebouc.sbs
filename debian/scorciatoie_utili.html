@@ -71,6 +71,10 @@ Contare nel terminale <code>i=0; while :; do date; sleep 1; echo $i; ((i++)); do
 parola<br>
 <code>find . -type f -newermt 2024-06-04 ! -newermt 2024-06-05 | less</code> per trovare i 
 documenti modificati tra due dati.<br>
+<code><pre>
+find . | xargs grep --text --exclude=*.txc -rne "ABC" -sl | xargs -L1 sed -i 's/ABC/def/g'</pre></code>
+per rimpiazare «ABC» con «def» nei documenti dove si trovano all'eccezione dei documenti che finiscono
+con <code>.txc</code>.
 </p>
 
 <h1 id="git">git</h1>
