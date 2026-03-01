@@ -60,6 +60,7 @@ che è alla versione 16.2.
 <p>Cambiare la data dal terminale : <code>date -s '2024-01-20 20:40:35'</code></p>
 <p>Ottenere un timestamp Unix: <code>date +%s</code></p>
 <p>Ottenere la data da un timestamp Unix: <code>date -d @1763810257</code></p>
+<p>Ottenere un timestamp Unix da una data : <code>date -d '2024-01-20 20:40:35' +%s</code></p>
 <p>
 Mostrare la data corrente nel terminale : <code>while :; do date; sleep 1; done</code><br>
 Contare nel terminale <code>i=0; while :; do date; sleep 1; echo $i; ((i++)); done</code>
