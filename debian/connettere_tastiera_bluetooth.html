@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html><head><title>Connettere una tastiera Bluetooth</title><meta charset="UTF-8"></head><body>
+<h1>Connettere una tastiera Bluetooth</h1>
+<h2>Contesto</h2>
+<p>Questi passi funzionano su Debian 11 e Raspbian 11 (che è basato su Debian).
+L'adattatore Bluetooth usato è un TP-Link collegato via USB.</p>
+<h2>Installare i pacchetti necessari</h2>
+<p>Verificare che <code>bluez</code> sia installato:<br>
+<code>sudo apt install bluez</code></p>
+<h2>Avviare il servizio Bluetooth</h2>
+<p>Abilitare e avviare il servizio:<br>
+<code>sudo systemctl enable bluetooth</code><br>
+<code>sudo systemctl start bluetooth</code></p>
+<p>Verificare che l'adattatore sia riconosciuto:<br>
+<code>bluetoothctl list</code></p>
+<h2>Connettere la tastiera</h2>
+<p>Mettere la tastiera in modalità di accoppiamento (pairing mode) seguendo le istruzioni del produttore.</p>
+<p>Aprire <code>bluetoothctl</code>:<br>
+<code>bluetoothctl</code></p>
+<p>Dentro la sessione interattiva, eseguire i seguenti comandi:<br>
+<xmp>
+[bluetooth]# power on
+[bluetooth]# agent on
+[bluetooth]# default-agent
+[bluetooth]# scan on
+</xmp></p>
+<p>Aspettare che appaia il dispositivo della tastiera nell'elenco. Annotare il suo indirizzo MAC (es. <code>AA:BB:CC:DD:EE:FF</code>), poi fermare la scansione:<br>
+<code>[bluetooth]# scan off</code></p>
+<p>Accoppiare, fidarsi e connettere il dispositivo:<br>
+<xmp>
+[bluetooth]# pair AA:BB:CC:DD:EE:FF
+[bluetooth]# trust AA:BB:CC:DD:EE:FF
+[bluetooth]# connect AA:BB:CC:DD:EE:FF
+</xmp></p>
+<p>Uscire dalla sessione:<br>
+<code>[bluetooth]# exit</code></p>
+<h2>Riconnessione automatica</h2>
+<p>Dopo aver eseguito <code>trust</code>, la tastiera si riconnetterà automaticamente ad ogni avvio
+senza dover ripetere la procedura di accoppiamento.</p>
+</body></html>
