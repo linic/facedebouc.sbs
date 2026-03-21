@@ -11,6 +11,7 @@
 <a href="#less">less</a>
 <a href="#lsof">lsof</a>
 <a href="#sed">sed</a>
+<a href="#usermod">usermod</a>
 <a href="#vim">vim</a>
 <a href="#wget">wget</a>
 <a href="#html">html</a>
@@ -201,6 +202,11 @@ una chiave già usata in un altro conto. Dopo è possibile di eseguire
 </p>
 <h2 id="ssh-keygen">ssh-keygen</h2>
 <p><code>ssh-keygen -t ed25519</code> per una nuova chiave ssh</p>
+
+<h1 id="usermod">usermod</h1>
+<p><code>sudo usermod -aG docker $USER</code> per aggiungere l'utente al gruppo</p>
+<p><code>newgrp docker</code> per rendere il nuovo gruppo attivo</p>
+<p><code>groups</code> per verificare il cambiamento</p>
 
 <h1 id="vim">vim</h1>
 <p><code>gui"</code> in modo normale per ottenere caratteri minuscoli dalla posizione attuale fine all carattere "</p>
