@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Ajuster la langue lorsque l'interface mélange l'anglais et le français</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Ajuster la langue lorsque l'interface mélange l'anglais et le français</h1>
+
+  <p>Windows 11 US English installé, langue changée pour <code>fr-CA</code> pendant les mises à jour. L'interface était partiellement en anglais et en français.</p>
+
+  <h2>Solution</h2>
+  <p><em>Note : je ne suis pas certain que ce soit exactement ce qui a fonctionné.</em></p>
+  <ol>
+    <li>Laisser toutes les mises à jour se compléter.</li>
+    <li>Désinstaller tous les packs de langue.</li>
+    <li>Redémarrer.</li>
+    <li>Réinstaller la langue française canadienne.</li>
+  </ol>
+
+  <h2>Commandes essayées sans succès</h2>
+  <p>Pour référence, les commandes PowerShell essayées :</p>
+  <pre><code>$LangList = New-WinUserLanguageList fr-CA
+Set-WinUserLanguageList $LangList -Force
+Set-WinUILanguageOverride fr-CA
+Set-Culture fr-CA
+Set-WinSystemLocale fr-CA</code></pre>
+  <table>
+    <tr><th>Commande</th><th>Effet</th></tr>
+    <tr><td><code>Set-WinUserLanguageList</code></td><td>Définit la liste de langues préférées de l'usager</td></tr>
+    <tr><td><code>Set-WinUILanguageOverride</code></td><td>Force la langue de l'interface</td></tr>
+    <tr><td><code>Set-Culture</code></td><td>Dates, nombres, formatage</td></tr>
+    <tr><td><code>Set-WinSystemLocale</code></td><td>Langue pour les programmes non-Unicode</td></tr>
+  </table>
+  <p><code>Set-WinHomeLocation -GeoId 39</code> pour changer la localisation pour le Canada.</p>
+  <p><code>Get-WinUserLanguageList</code> pour vérifier que <code>fr-CA</code> est dans la liste.</p>
+  <p>Commandes DISM essayées :</p>
+  <pre><code>DISM /Online /Cleanup-Image /StartComponentCleanup
+DISM /Online /Cleanup-Image /RestoreHealth
+dism /online /get-intl</code></pre>
+  <p>La dernière ligne affiche quel paquet de langue est installé.</p>
+</body>
+
+</html>

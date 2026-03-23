@@ -1,12 +1,12 @@
 # Configurer Windows 11 sur un Lenovo IdeaPad
 
-## Sans Internet
-Avec un ordinateur neuf et Windows 11 préinstallé, faire
-Shift+F10 ou Fn+Shift+F10 et OOBE\BYPASSNRO dans le terminal et Enter.
-L'ordi redémarre et l'option de continuer sans internet sera disponible.
+## Contourner l'obligation de connexion internet lors de la première configuration
+
+Avec un ordinateur neuf et Windows 11 préinstallé, ouvrir un terminal avec `Shift+F10` ou `Fn+Shift+F10`, puis taper `OOBE\BYPASSNRO` et appuyer sur Entrée. L'ordinateur redémarre et l'option de continuer sans internet devient disponible.
 
 ## Limiter l'usure de la pile
-Sur les lenovo ideapad, on peut appuyer sur F2 lorsqu'on voit l'image de Lenovo.
-Désactiver l'allumage quand le capot ouvre pour éviter que le portable s'allume par erreur.
-Mettre le mode 'battery saving' pour que le portable soit plus silencieux et que la pile
-aie une plus longue durée de vie.
+
+Appuyer sur `F2` au démarrage lorsque le logo Lenovo s'affiche pour entrer dans le BIOS.
+
+- Désactiver l'allumage automatique à l'ouverture du capot pour éviter que le portable s'allume par erreur.
+- Activer le mode «battery saving» pour que le portable soit plus silencieux et que la pile ait une plus longue durée de vie.
