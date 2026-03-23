@@ -79,6 +79,9 @@ Ma partition FAT32 est plus que 8 Go donc on a besoin de LBA donc entrer c
 p pour voir les partitions, le LBA va être là
 w pour écrire les changements
 </pre></code>
+<p>Si la partition doit être reformatée :</p>
+<code><pre>sudo mkfs.vfat -F 32 /dev/sda2</pre></code>
+<p>S'assurer aussi que la partition est marquée bootable (fdisk → toggle boot flag).</p>
 
 <h2 id="freedosimage">FreeDOS equivalent a l'image bootable</h2>
 Quitter l'installation pour retrouver la ligne de command DOS.
@@ -100,7 +103,18 @@ sudo update-grub
 Au lieu de quitter l'installation, continuer l'installation, mais refuser d'installer un bootloader.
 On s'assure de ne pas ecraser le boot sector quand l'installeur nous le demande.
 
-Important, mettre les contrôleurs en mode IDE.
+<h2 id="ahci">Problème : FreeDOS échoue à démarrer avec le contrôleur SATA en mode AHCI</h2>
+<p><strong>Résultat :</strong> Erreurs au démarrage :</p>
+<pre><code>Invalid Opcode at 88D6 10D0 0202
+Bad or missing Command Interpreter</code></pre>
+<p><code>COMP D:\COMMAND.COM C:\COMMAND.COM</code> montre de nombreuses différences entre l'image FreeDOS et l'installation sur disque.</p>
+<p><strong>Explication :</strong> FreeDOS n'a pas de drivers AHCI natifs. Il utilise les interruptions BIOS (INT 13h) qui ne communiquent pas avec un contrôleur SATA en mode AHCI. Le démarrage depuis USB fonctionne car il passe par le contrôleur USB, pas SATA.</p>
+<p><strong>Solution :</strong> Mettre le contrôleur SATA en mode IDE/Legacy dans le BIOS/UEFI.</p>
+<p>Alternatives si on veut garder le mode AHCI :</p>
+<ul>
+  <li>Ajouter un driver DOS AHCI (ex. <code>UIDE.SYS</code>) à la configuration FreeDOS.</li>
+  <li>Utiliser le module AHCI de GRUB2 pour charger le kernel FreeDOS.</li>
+</ul>
 </p>
 <h1 id="tcl">Obtenir les fichiers pour TCL</h1>
 <p>
@@ -124,4 +138,5 @@ md5sum -c rootfs.gz.md5.txt
 Et ensuite on place les fichiers dans /boottcl/ 
 </p>
 <p>On peut aussi modifier /etc/default/grub pour selectionner l'entree desiree.</p>
+<p>Voir aussi <a href="../tiny_core_linux/compile-rust-i586-locally.html">Compiler Rust pour i586 localement</a> pour l'utilisation de core64 avec espace utilisateur 32 bits.</p>
 </body></html>
