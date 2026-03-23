@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Interactions ACPI et AMDGPU dans Debian 13.3</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Interactions ACPI et AMDGPU dans Debian 13.3</h1>
+
+  <h2>Expérience 1 : Démarrage normal (ACPI activé)</h2>
+  <p><strong>Résultat :</strong> La résolution de l'écran change automatiquement environ 10 secondes après le démarrage.</p>
+  <p><strong>Explication :</strong> Le processus se déroule en plusieurs étapes :</p>
+  <ol>
+    <li>GRUB initialise un mode vidéo basique (ex. 1024×768).</li>
+    <li>Le kernel Linux charge et utilise ACPI pour détecter le GPU AMD.</li>
+    <li>Le module <code>amdgpu</code> est chargé (inclus par défaut dans le kernel — aucune installation séparée nécessaire).</li>
+    <li>Le Kernel Mode-Setting (KMS) s'active : il interroge le moniteur (via EDID) et règle la résolution native.</li>
+  </ol>
+
+  <h2>Expérience 2 : Démarrage avec <code>acpi=off</code></h2>
+  <p><strong>Résultat :</strong> La résolution reste faible et ne change plus automatiquement. Les messages d'erreur ACPI disparaissent.</p>
+  <p><strong>Explication :</strong> Sans ACPI, le kernel ne peut pas découvrir correctement les périphériques PCIe. Le module <code>amdgpu</code> ne se charge pas ou ne s'initialise pas complètement, donc KMS ne s'active pas. Le système reste bloqué dans le mode vidéo basique de GRUB. C'est un compromis : les erreurs ACPI disparaissent mais la détection matérielle du GPU est cassée.</p>
+
+  <h2>Recommandations</h2>
+  <p><em>Note : je n'ai pas testé le contenu ci-dessous qui est potentiellement inexact.</em></p>
+  <p>Préférer des paramètres ciblés :</p>
+  <ul>
+    <li><code>loglevel=3</code> — Masque les messages non critiques au démarrage sans désactiver ACPI. Solution recommandée.</li>
+    <li><code>acpi=strict</code> — Force le kernel à respecter strictement la spec ACPI, ce qui peut contourner certains bugs firmware.</li>
+    <li><code>pci=noacpi</code> — Désactive uniquement la partie ACPI du routage PCI, possible source des erreurs.</li>
+  </ul>
+  <p>Pour vérifier que le driver <code>amdgpu</code> est actif :</p>
+  <pre><code>lspci -k | grep -A 3 -E "(VGA|3D)"</code></pre>
+  <p>La sortie doit contenir <code>Kernel driver in use: amdgpu</code>.</p>
+</body>
+
+</html>
