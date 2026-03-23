@@ -1,0 +1,142 @@
+<!DOCTYPE html><html>
+<head><title>5 systemes et 2 paritions</title><meta charset="UTF-8"></head><body>
+<h1>Pourquoi?</h1>
+<p>Avoir Debian 13.3, Core, CorePure64, <a href="../tiny_core_linux/noyau64_utilisateur32.html">Core avec l'espace noyau 64 bits et l'espace utilisateur 32 bits</a> et FreeDOS</p>
+<p>Surprenant, mais TCL peut coexister sur la meme partition ext4 que debian. J'ai suivi l'installation en mode expert pour paritioner mon disque de 120 Go
+en 1 partition de 118 Go ext4 pour Debian et une partition FAT32 a la fin pour FreeDOS.</p>
+<h1>Apercu de l'organisation du disque et des `menuentry` a la fin</h1>
+<p>J'ai debian 13.3 installe sur /dev/sda1 (partition de 118 Go). J'ai des entrees additionnelles par /etc/grub.d/40_custom et je met a jour le grub avec sudo update-grub.</p>
+<pre><code>
+#!/bin/sh
+exec tail -n +3 $0
+# This file provides an easy way to add custom menu entries.  Simply type the
+# menu entries you want to add after this comment.  Be careful not to change
+# the 'exec tail' line above.
+menuentry "core64 17.0 with 32 bit user space" {
+	insmod ext2
+	set root='hd0,1'
+	linux /boottcl/vmlinuz64-17.0 vga=795 syslog showapps tce=UUID="ab289eda-4e92-4c53-994d-1b7cfdef0d8e" home=UUID="ab289eda-4e92-4c53-994d-1b7cfdef0d8e" opt=UUID="ab289eda-4e92-4c53-994d-1b7cfdef0d8e" lang=fr_CA.UTF-8
+	initrd /boottcl/rootfs-17.0.gz /boottcl/modules64-17.0.gz
+}
+menuentry "core64 17.0" {
+	insmod ext2
+	set root='hd0,1'
+	linux /boottcl/vmlinuz64-17.0 vga=795 syslog showapps tce=UUID="ab289eda-4e92-4c53-994d-1b7cfdef0d8e" home=UUID="ab289eda-4e92-4c53-994d-1b7cfdef0d8e" opt=UUID="ab289eda-4e92-4c53-994d-1b7cfdef0d8e" lang=fr_CA.UTF-8
+	initrd /boottcl/corepure64-17.0.gz
+}
+
+menuentry "core 17.0" {
+	insmod ext2
+	set root='hd0,1'
+	linux /boottcl/vmlinuz-17.0 vga=795 syslog showapps tce=UUID="ab289eda-4e92-4c53-994d-1b7cfdef0d8e" home=UUID="ab289eda-4e92-4c53-994d-1b7cfdef0d8e" opt=UUID="ab289eda-4e92-4c53-994d-1b7cfdef0d8e" lang=fr_CA.UTF-8
+	initrd /boottcl/core-17.0.gz
+}
+menuentry "FreeDOS" {
+	set root='hd0,2'
+	insmod part_msdos
+	insmod fat
+	insmod freedos
+	drivemap -s (hd0) ${root}
+	parttool (hd0,1) hidden+
+	freedos /kernel.sys
+}
+</code></pre>
+</p>
+<h1>Etapes</h1>
+<p>
+<ol>
+<li>installer debian 13.3 en utilisant l'image «net install» et l'option «expert installation».</li>
+<li>Configurer la langue, le clavier, le miroir de paquets, etc...</li>
+<li>Partitionner en 2 ou 3 partitions primaires: 118 Go de ext4, 2 Go de FAT32.</li>
+<li>Compléter l'installation de Debian et <a href="#freedospartion">Regler la partition FAT32 pour FreeDOS</a></li>
+<li>Creer les `menuentry` tout de suite meme si les fichiers sont manquants.</li>
+<li><a href="https://www.ibiblio.org/pub/micro/pc-stuff/freedos/files/distributions/1.4/FD14-FullUSB.zip">Telecharger FreeDOS - FD14-FullUSB.zip</a></li>
+<li>
+Creer une carte SD ou clef USB bootable avec l'image de FreeDOS sous Debian avec
+<pre><code>
+sudo umount /dev/mmcblk0
+sudo cp  FD14FULL.img /dev/mmcblk0
+sudo sync
+</pre></code>
+Puis, redemarrer.
+</li>
+<li>Au démarrage, peser sur ESC pour booter dans la carte FreeDOS.</li>
+<li>Installer FreeDOS, soit 
+<a href="#freedosimage">FreeDOS equivalent a l'image bootable</a>
+<a href="#freedosnormal">FreeDOS normalement installe</a>
+</li>
+<li><a href="#tcl">Telecharger les fichiers clefs de Tiny Core Linux a partir de Debian et ajouter un `menuentry` pour demarrer Tiny Core Linux.</a></li>
+</ol>
+
+<h2 id="freedospartition">Regler la partition FAT32 pour FreeDOS</h2>
+boot debian
+<code><pre>
+sudo umount /dev/sda2
+sudo fdisk /dev/sda
+p pour voir les partitions, le LBA va manquer
+t pour changer le type de la partition
+Ma partition FAT32 est plus que 8 Go donc on a besoin de LBA donc entrer c
+p pour voir les partitions, le LBA va être là
+w pour écrire les changements
+</pre></code>
+<p>Si la partition doit être reformatée :</p>
+<code><pre>sudo mkfs.vfat -F 32 /dev/sda2</pre></code>
+<p>S'assurer aussi que la partition est marquée bootable (fdisk → toggle boot flag).</p>
+
+<h2 id="freedosimage">FreeDOS equivalent a l'image bootable</h2>
+Quitter l'installation pour retrouver la ligne de command DOS.
+SYS D:
+XCOPY C:\*.* D:\ /E /H
+edit fdauto.bat
+rem cdrom (2fois)
+rem setup
+rem welcome
+Ensuite REBOOT ou CTRL+ALT+DELETE pour redémarrer
+Dans Debian, modifier /etc/grub.d/40_custom pour ajouter un menuentry pour freedos
+pour booter directement dans freedos, aller dans debian et
+sudo vim /etc/default/grub
+change the default entry to 2
+change the default resolution to 640x480
+sudo update-grub
+
+<h2 id="freedosnormal">FreeDOS normalement installe</h2>
+Au lieu de quitter l'installation, continuer l'installation, mais refuser d'installer un bootloader.
+On s'assure de ne pas ecraser le boot sector quand l'installeur nous le demande.
+
+<h2 id="ahci">Problème : FreeDOS échoue à démarrer avec le contrôleur SATA en mode AHCI</h2>
+<p><strong>Résultat :</strong> Erreurs au démarrage :</p>
+<pre><code>Invalid Opcode at 88D6 10D0 0202
+Bad or missing Command Interpreter</code></pre>
+<p><code>COMP D:\COMMAND.COM C:\COMMAND.COM</code> montre de nombreuses différences entre l'image FreeDOS et l'installation sur disque.</p>
+<p><strong>Explication :</strong> FreeDOS n'a pas de drivers AHCI natifs. Il utilise les interruptions BIOS (INT 13h) qui ne communiquent pas avec un contrôleur SATA en mode AHCI. Le démarrage depuis USB fonctionne car il passe par le contrôleur USB, pas SATA.</p>
+<p><strong>Solution :</strong> Mettre le contrôleur SATA en mode IDE/Legacy dans le BIOS/UEFI.</p>
+<p>Alternatives si on veut garder le mode AHCI :</p>
+<ul>
+  <li>Ajouter un driver DOS AHCI (ex. <code>UIDE.SYS</code>) à la configuration FreeDOS.</li>
+  <li>Utiliser le module AHCI de GRUB2 pour charger le kernel FreeDOS.</li>
+</ul>
+</p>
+<h1 id="tcl">Obtenir les fichiers pour TCL</h1>
+<p>
+Pour obtenir les fichiers necessaires:
+<pre><code>
+#!/bin/sh
+MAIN_URL="http://www.tinycorelinux.net/17.x/x86/release/distribution_files"
+VMLINUZ_64="$MAIN_URL/vmlinuz64"
+MODULES_64="$MAIN_URL/modules64.gz"
+ROOTFS_GZ="$MAIN_URL/rootfs.gz"
+wget "$VMLINUZ_64"
+wget "$VMLINUZ_64.md5.txt"
+md5sum -c vmlinuz64.md5.txt
+wget "$MODULES_64"
+wget "$MODULES_64.md5.txt"
+md5sum -c modules64.gz.md5.txt
+wget "$ROOTFS_GZ"
+wget "$ROOTFS_GZ.md5.txt"
+md5sum -c rootfs.gz.md5.txt
+</code></pre>
+Et ensuite on place les fichiers dans /boottcl/ 
+</p>
+<p>On peut aussi modifier /etc/default/grub pour selectionner l'entree desiree.</p>
+<p>Voir aussi <a href="../tiny_core_linux/compile-rust-i586-locally.html">Compiler Rust pour i586 localement</a> pour l'utilisation de core64 avec espace utilisateur 32 bits.</p>
+</body></html>
