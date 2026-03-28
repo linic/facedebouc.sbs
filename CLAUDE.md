@@ -21,3 +21,9 @@ When a `.md` file exists in a topic subdirectory with raw notes or a conversatio
 3. **Convert** the `.md` to an equivalent `.html` page (same subdirectory, same filename).
 4. **Link** — add an entry for the new page in `index.html`.
 5. **Commit and push** to the branch currently checked out locally once linic agrees with the content.
+
+## Content conventions
+
+**Quantities:** Use digits and fractions, not words (e.g. `1½` not `1 tazza e mezzo`, `½` not `mezza`).
+- Use `½` and `¼` unicode characters.
+- For all other fractions, use digits and `/` (e.g. `3/4`, `1/8`, `2/3`).

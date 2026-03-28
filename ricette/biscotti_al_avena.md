@@ -3,11 +3,11 @@
 ## Ingredienti base (comuni a tutte le versioni)
 
 - 1 cucchiaio da tavola di vaniglia
-- 1 tazza e mezzo di farina di grano
+- 1½ tazze di farina di grano
 - 1 cucchiaino a tè di bicarbonato di sodio
-- 1 cucchiaino e mezzo di cannella in polvere
+- 1½ cucchiaini di cannella in polvere
 - 3 tazze di avena
-- mezza tazza di noci tritate (noix de grenobles coupées)
+- ½ tazza di noci tritate (noix de grenobles coupées)
 
 ## Ingredienti intercambiabili
 
@@ -20,15 +20,15 @@ Le tre versioni qui sotto sono equivalenti: producono un impasto con la stessa c
 
 | Ingrediente              | Versione 1        | Versione 2                      | Versione 3                           |
 | ------------------------ | ----------------- | ------------------------------- | ------------------------------------ |
-| Zucchero                 | 1/2 tazza         | 2/3 tazza di canna (cassonade)  | 1/2 tazza                            |
+| Zucchero                 | ½ tazza           | 2/3 tazza di canna (cassonade)  | ½ tazza                              |
 | Uova                     | 2 grosse          | 2 grossi                        | 6 (2 base + 4 aggiuntive)            |
 | Purea di mele            | 2 tazze           | 1 tazza                         | —                                    |
-| Burro non salato         | —                 | 1/2 tazza (a temperatura amb.)  | 1/4 tazza fuso (suggerimento)        |
+| Burro non salato         | —                 | ½ tazza (a temperatura amb.)    | ¼ tazza fuso (suggerimento)          |
 | Latte 3,25%              | —                 | —                               | 3/4 tazza                            |
 | Olio d'avocado           | —                 | —                               | 1/8 tazza (usato; vedi nota burro)   |
 | Melassa                  | —                 | 1 cucchiaio da tavola           | —                                    |
 
-**Nota sul burro in V3:** si è usato 1/8 tazza di olio d'avocado con ottimi risultati; il feedback ricevuto suggerisce di usare invece 1/4 tazza di burro fuso. Non ancora testato.
+**Nota sul burro in V3:** si è usato 1/8 tazza di olio d'avocado con ottimi risultati; il feedback ricevuto suggerisce di usare invece ¼ tazza di burro fuso. Non ancora testato.
 
 ## Ingredienti secchi specifici per versione
 
@@ -38,7 +38,7 @@ Le tre versioni qui sotto sono equivalenti: producono un impasto con la stessa c
 
 ```
 [ Ciotola piccola — ingredienti secchi ]
-  farina + bicarbonato + cannella
+  farina + bicarbonato + cannella + avena + noci + mirtilli/uva
   + sale (solo V2)
         |
         v
@@ -53,24 +53,14 @@ Le tre versioni qui sotto sono equivalenti: producono un impasto con la stessa c
   aggiungere la ciotola piccola alla ciotola grande; mescolare
         |
         v
-[ Aggiungere avena + noci + mirtilli/uva ]
-  mescolare
-        |
-        v
-[ (Opzionale) Frigorifero 30-60 minuti ]
-        |
-        v
 [ Forno a 350°F (177°C) ]
         |
         v
 [ Formare l'impasto ]
-  V1, V2: fare palline
-  V3: distribuire in 3 grandi contenitori di alluminio e appiattire uniformemente
+  distribuire in 3 grandi contenitori di alluminio e appiattire uniformemente
         |
         v
-[ Cuocere ]
-  V1, V3: 20 min
-  V2:     12-14 min
+[ Cuocere — 20 min ]
 ```
 
 ## Ispirazione
