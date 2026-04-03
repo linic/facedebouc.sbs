@@ -9,6 +9,7 @@ Static HTML website published via GitHub Pages at https://facedebouc.sbs.
 
 - No build system or framework — plain HTML files
 - Multilingual content: French, Italian, and English
+- Sometimes the words in French and Italian are missing accents and should be added
 - `index.html` is maintained manually: links to new pages must be added by hand
 - Each topic is a subdirectory (e.g. `debian/`, `rust/`, `ricette/`) containing `.html` files
 
