@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>flwm dans Debian 13.3</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Utiliser <code>flwm</code> dans Debian 13.3</h1>
+  <p>Obtenir un environnement de bureau simple pour naviguer avec <code>firefox-esr</code> sous Debian 13.3.</p>
+
+  <h2>Expérience 1 : Vérification et installation des paquets</h2>
+  <p><strong>Résultat :</strong> <code>flwm</code>, <code>xorg</code> et <code>firefox-esr</code> sont installés.</p>
+  <p><strong>Explication :</strong></p>
+  <ul>
+    <li><pre><code>sudo apt list flwm*</code></pre> — vérifie si <code>flwm</code> est disponible dans les dépôts.</li>
+    <li><pre><code>sudo apt list xorg*</code></pre> — vérifie si <code>xorg</code> est disponible (nécessaire pour démarrer un serveur X avec <code>startx</code>).</li>
+    <li><pre><code>sudo apt list firefox*</code></pre> — vérifie si <code>firefox-esr</code> est disponible (pour les sites utilisant JavaScript, non supporté par <code>lynx</code>).</li>
+    <li><pre><code>sudo apt install flwm xorg firefox-esr</code></pre> — installe les trois paquets.</li>
+  </ul>
+
+  <h2>Expérience 2 : Démarrage de flwm et ouverture de Firefox</h2>
+  <p><strong>Résultat :</strong> Firefox s'ouvre dans un bureau léger géré par <code>flwm</code>.</p>
+  <p><strong>Explication :</strong></p>
+  <ol>
+    <li>Sur le premier terminal noyau, garder <code>tmux</code> ouvert.</li>
+    <li>Basculer vers un 2e terminal avec <code>Ctrl + Alt + F2</code>.</li>
+    <li>Se connecter.</li>
+    <li>Exécuter <code>startx</code>.</li>
+    <li>Clic droit (ou <code>Alt + Tab</code>) pour ouvrir le menu <code>flwm</code>, puis aller dans <code>Debian &gt; Applications &gt; Shells &gt; Bash</code>.</li>
+    <li>Dans le terminal qui s'ouvre, exécuter <code>firefox</code>.</li>
+  </ol>
+</body>
+
+</html>
