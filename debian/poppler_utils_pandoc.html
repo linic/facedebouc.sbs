@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>poppler-utils and pandoc</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Converting a PDF to Markdown with <code>poppler-utils</code> and <code>pandoc</code></h1>
+  <p>Reference guide: <a href="https://ostechnix.com/convert-pdf-to-markdown-linux/">convert-pdf-to-markdown-linux</a></p>
+
+  <h2>Experience 1: Installation</h2>
+  <p><strong>Result:</strong> <code>poppler-utils</code> and <code>pandoc</code> are installed.</p>
+  <p><strong>Explanation:</strong></p>
+  <pre><code>sudo apt install poppler-utils pandoc</code></pre>
+
+  <h2>Experience 2: Converting the PDF to text and extracting images</h2>
+  <p><strong>Result:</strong> The PDF is converted to a text file and images are extracted.</p>
+  <p><strong>Explanation:</strong></p>
+  <pre><code>pdftotext -layout ../corebook.pdf corebook.txt
+pdfimages -all ../corebook.pdf images/image</code></pre>
+  <ul>
+    <li><code>pdftotext -layout</code> preserves the text layout.</li>
+    <li><code>pdfimages -all</code> extracts all images from the PDF into the <code>images/</code> directory.</li>
+  </ul>
+
+  <h2>Experience 3: Converting to Markdown with <code>pandoc</code></h2>
+  <p><strong>Result:</strong> Two Markdown files are generated (<code>corebook.md</code> and <code>corebook-f.md</code>). The difference between the two is minimal.</p>
+  <p><strong>Explanation:</strong></p>
+  <pre><code>pandoc -t markdown corebook.txt -o corebook.md
+pandoc -f markdown corebook.txt -o corebook-f.md</code></pre>
+  <p>The <code>-t</code> and <code>-f</code> options produce very similar output in this case. The reformatting is minimal.</p>
+
+  <h2>Conclusion</h2>
+  <p>The git repository of the book was cloned afterwards to work directly from source:</p>
+  <pre><code>git clone git@github.com:tinycorelinux/corebook.git</code></pre>
+  <p>It is easier to work from source.</p>
+
+  <h2>Other useful commands</h2>
+  <pre><code># List pandoc supported input formats
+pandoc --list-input-formats | paste -sd,
+biblatex,bibtex,bits,commonmark,commonmark_x,creole,csljson,csv,docbook,docx,dokuwiki,endnotexml,epub,fb2,gfm,haddock,html,ipynb,jats,jira,json,latex,man,markdown,markdown_github,markdown_mmd,markdown_phpextra,markdown_strict,mediawiki,muse,native,odt,opml,org,ris,rst,rtf,t2t,textile,tikiwiki,tsv,twiki,typst,vimwiki
+
+# Direct PDF to Markdown conversion in one command
+pdftotext input.pdf - | pandoc -t markdown -o output.md</code></pre>
+</body>
+
+</html>
