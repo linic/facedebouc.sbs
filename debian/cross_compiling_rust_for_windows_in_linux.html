@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Cross Compiling Windows Executables with Rust on Linux</title>
+  <meta charset="UTF-8">
+</head>
+
+<body>
+  <h1>Cross Compiling Windows Executables with Rust on Linux</h1>
+
+  <h2>Experience 1: Installing Rust</h2>
+  <p><strong>Result:</strong> Rust is installed.</p>
+  <p><strong>Explanation:</strong></p>
+  <pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh</code></pre>
+
+  <h2>Experience 2: First Linux build — fails due to missing OpenSSL</h2>
+  <p><strong>Result:</strong> Build fails with <code>error: failed to run custom build command for 'openssl-sys'</code>.</p>
+  <p><strong>Explanation:</strong> <code>reqwest</code> v0.11 enables <code>native-tls</code> (OpenSSL) by default. <code>pkg-config</code> was not installed, so the build system could not locate OpenSSL:</p>
+  <pre><code>Could not find directory of OpenSSL installation
+The pkg-config command could not be found.</code></pre>
+  <p>Fix: disable the default <code>native-tls</code> feature and use <code>rustls-tls</code> instead in <code>Cargo.toml</code>:</p>
+  <pre><code>reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }</code></pre>
+
+  <h2>Experience 3: Linux build after switching to <code>rustls-tls</code></h2>
+  <p><strong>Result:</strong> Linux ELF 64-bit executable produced (6.4MB).</p>
+  <p><strong>Explanation:</strong></p>
+  <pre><code>source ~/.cargo/env &amp;&amp; cd /home/utilisateur/monprog &amp;&amp; cargo build --release</code></pre>
+  <p>Note: <code>CARGO_TARGET_DIR</code> was set to a non-standard path by the build environment:</p>
+  <pre><code>CARGO_TARGET_DIR=/tmp/cursor-sandbox-cache/.../cargo-target</code></pre>
+  <p>The executable was confirmed at:</p>
+  <pre><code>.../cargo-target/release/monprog: ELF 64-bit LSB pie executable, x86-64</code></pre>
+
+  <h2>Experience 4: Installing the MinGW cross-compiler</h2>
+  <p><strong>Result:</strong> <code>gcc-mingw-w64-x86-64</code> is installed.</p>
+  <p><strong>Explanation:</strong></p>
+  <pre><code>sudo apt-get install -y gcc-mingw-w64-x86-64</code></pre>
+
+  <h2>Experience 5: Cross-compiling for Windows</h2>
+  <p><strong>Result:</strong> Windows PE32+ executable produced (9.3MB).</p>
+  <p><strong>Explanation:</strong></p>
+  <pre><code>source ~/.cargo/env &amp;&amp; cd /home/utilisateur/monprog &amp;&amp; cargo build --release --target x86_64-pc-windows-gnu</code></pre>
+  <p>The executable was confirmed at:</p>
+  <pre><code>.../cargo-target/x86_64-pc-windows-gnu/release/monprog.exe: PE32+ executable (console) x86-64, for MS Windows</code></pre>
+
+  <h2>Summary: build commands</h2>
+  <pre><code># Linux
+cargo build --release
+
+# Windows .exe
+cargo build --release --target x86_64-pc-windows-gnu</code></pre>
+
+  <h2>Diagnostic commands</h2>
+  <pre><code># Verify the cross-compiler is installed
+which x86_64-w64-mingw32-gcc &amp;&amp; x86_64-w64-mingw32-gcc --version | head -1
+
+# List installed Rust targets
+source ~/.cargo/env &amp;&amp; rustup target list --installed
+
+# Find output executables
+find /home/utilisateur/monprog/target -name "monprog*" -type f ! -name "*.d" ! -name "*.rlib" 2&gt;/dev/null | head -10
+
+# Check CARGO_TARGET_DIR
+echo "CARGO_TARGET_DIR=${CARGO_TARGET_DIR:-unset}"
+
+# Verify executable type
+file target/release/monprog
+file target/x86_64-pc-windows-gnu/release/monprog.exe</code></pre>
+</body>
+
+</html>
