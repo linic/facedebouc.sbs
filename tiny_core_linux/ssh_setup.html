@@ -1,0 +1,303 @@
+<!DOCTYPE html><html><head><title>SSH setup on TinyCore Linux 17.x</title><meta charset="UTF-8"></head>
+<body>
+<h1 id="ssh-setup-on-tinycore-linux-17.x">SSH setup on TinyCore Linux
+17.x</h1>
+<p>One-time setup to install an SSH server on the machine and connect to
+it from a Debian machine using key-based authentication.</p>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>The persistence method depends on how TinyCore was installed. Choose
+your path before starting:</p>
+<pre><code>            Boot TCL
+               │
+               ▼
+    ┌──────────────────────────┐
+    │  Frugal install?         │
+    │  (home= and opt= in      │
+    │   APPEND line)           │
+    └──────────────────────────┘
+          │            │
+         No            Yes
+    (RAM only)    (files on disk)
+          │            │
+          ▼            ▼
+    filetool.sh    home/tc restore
+    method         method
+    Steps 1–5      Steps 1–5
+    then Step 6a   then Step 6b
+          │            │
+          └─────┬──────┘
+                ▼
+      SSH works after reboot</code></pre>
+<p><strong>Not sure which you have?</strong> Run:</p>
+<pre class="sh"><code>cat /proc/cmdline</code></pre>
+<p>If the output contains <code>home=</code> and <code>opt=</code>, you
+have a frugal install. If not, you are booting from RAM only.</p>
+<hr />
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><p>The machine is running TinyCore Linux 17.x (Core, no
+GUI).</p></li>
+<li><p>The machine has network access. Verify with
+<code>ifconfig eth0</code>. If no IP is shown, configure manually:</p>
+<pre class="sh"><code>sudo ifconfig eth0 192.168.0.180   # adjust to your network
+sudo route add default gw 192.168.0.1
+echo &quot;nameserver 1.1.1.1&quot; | sudo tee /etc/resolv.conf</code></pre></li>
+<li><p>You have physical or keyboard access to the machine for this
+first-time setup.</p></li>
+</ul>
+<hr />
+<h2 id="step-1-install-openssh">Step 1 — Install openssh</h2>
+<p>On the machine:</p>
+<pre class="sh"><code>tce-load -wi openssh</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Extension</th>
+<th>Version</th>
+<th>Dependency</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>openssh.tcz</code></td>
+<td>10.0p1</td>
+<td><code>openssl.tcz</code> (auto-installed)</td>
+</tr>
+</tbody>
+</table>
+<p>After installation: - Init script:
+<code>/usr/local/etc/init.d/openssh</code> - Server binary:
+<code>/usr/local/sbin/sshd</code> - Config templates:
+<code>/usr/local/etc/ssh/sshd_config.orig</code>,
+<code>ssh_config.orig</code></p>
+<hr />
+<h2 id="step-2-configure-sshd">Step 2 — Configure sshd</h2>
+<p>Copy the template to activate the config:</p>
+<pre class="sh"><code>sudo cp /usr/local/etc/ssh/sshd_config.orig /usr/local/etc/ssh/sshd_config</code></pre>
+<p>The defaults are usable as-is. Optionally harden by disabling
+password authentication — do this <strong>after</strong> verifying
+key-based login works (Step 5):</p>
+<pre class="sh"><code>sudo vi /usr/local/etc/ssh/sshd_config</code></pre>
+<p>Uncomment or set:</p>
+<pre><code>PermitRootLogin prohibit-password
+PasswordAuthentication no</code></pre>
+<hr />
+<h2 id="step-3-generate-an-ed25519-key-pair-on-the-debian-machine">Step
+3 — Generate an ed25519 key pair on the Debian machine</h2>
+<p>On the Debian machine (not the machine):</p>
+<pre class="sh"><code>ssh-keygen -t ed25519</code></pre>
+<p>This creates: - <code>~/.ssh/id_ed25519</code> — private key (keep
+secret) - <code>~/.ssh/id_ed25519.pub</code> — public key (to be placed
+on the machine)</p>
+<hr />
+<h2 id="step-4-authorize-the-key-on-the-machine">Step 4 — Authorize the
+key on the machine</h2>
+<p><strong>Option A — copy over the network (if password auth is still
+on):</strong></p>
+<p>On the Debian machine:</p>
+<pre class="sh"><code>scp ~/.ssh/id_ed25519.pub tc@&lt;machine-ip&gt;:~/id_ed25519.pub</code></pre>
+<p>Then on the machine:</p>
+<pre class="sh"><code>mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+cat ~/id_ed25519.pub &gt;&gt; ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+rm ~/id_ed25519.pub</code></pre>
+<p><strong>Option B — type or paste directly on the
+machine:</strong></p>
+<pre class="sh"><code>mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh
+vi ~/.ssh/authorized_keys   # paste the contents of id_ed25519.pub
+chmod 600 ~/.ssh/authorized_keys</code></pre>
+<p><strong>Option C — transfer with netcat (no SSH, no password auth
+required):</strong></p>
+<p>TinyCore’s BusyBox includes <code>nc</code>, so no extra extension is
+needed.</p>
+<p>First, start the listener on the machine:</p>
+<pre class="sh"><code>nc -l -p 9999 &gt; ~/id_ed25519.pub</code></pre>
+<p>Then, on the Debian machine, send the key:</p>
+<pre class="sh"><code>cat ~/.ssh/id_ed25519.pub | nc &lt;machine-ip&gt; 9999</code></pre>
+<p><code>nc</code> exits on both sides once the transfer completes. Then
+on the machine:</p>
+<pre class="sh"><code>mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+cat ~/id_ed25519.pub &gt;&gt; ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+rm ~/id_ed25519.pub</code></pre>
+<hr />
+<h2 id="step-5-start-sshd-and-verify">Step 5 — Start sshd and
+verify</h2>
+<p>On the machine:</p>
+<pre class="sh"><code>sudo /usr/local/etc/init.d/openssh start</code></pre>
+<p>On the Debian machine:</p>
+<pre class="sh"><code>ssh -i ~/.ssh/id_ed25519 tc@&lt;machine-ip&gt;</code></pre>
+<p><strong>First connection:</strong> SSH will display a fingerprint and
+ask you to confirm. To verify it beforehand on the machine:</p>
+<pre class="sh"><code>ssh-keygen -lf /usr/local/etc/ssh/ssh_host_ed25519_key.pub</code></pre>
+<p>Compare the output to what the Debian client shows before
+accepting.</p>
+<hr />
+<h2 id="step-6-persist-across-reboots">Step 6 — Persist across
+reboots</h2>
+<p>TinyCore resets to a clean state on each boot. Choose the method that
+matches your install (see the Overview flowchart).</p>
+<hr />
+<h3 id="step-6a-filetool.sh-method-ram-only-install">Step 6a —
+filetool.sh method (RAM-only install)</h3>
+<p>In a RAM-only install, no directory is backed by a disk partition.
+The <code>filetool.sh</code> backup saves a snapshot of selected files
+into <code>mydata.tgz</code> on the tce partition, which is restored at
+the next boot.</p>
+<p><strong>Add config files and host keys to the backup
+list:</strong></p>
+<pre class="sh"><code>cat &gt;&gt; /opt/.filetool.lst &lt;&lt; &#39;EOF&#39;
+usr/local/etc/ssh/sshd_config
+usr/local/etc/ssh/ssh_host_rsa_key
+usr/local/etc/ssh/ssh_host_rsa_key.pub
+usr/local/etc/ssh/ssh_host_ecdsa_key
+usr/local/etc/ssh/ssh_host_ecdsa_key.pub
+usr/local/etc/ssh/ssh_host_ed25519_key
+usr/local/etc/ssh/ssh_host_ed25519_key.pub
+home/tc/.ssh/authorized_keys
+EOF</code></pre>
+<p><strong>Add sshd autostart and the backup list itself to the
+backup:</strong></p>
+<pre class="sh"><code>echo &#39;/usr/local/etc/init.d/openssh start&#39; | sudo tee -a /opt/bootlocal.sh
+
+cat &gt;&gt; /opt/.filetool.lst &lt;&lt; &#39;EOF&#39;
+opt/bootlocal.sh
+opt/.filetool.lst
+EOF</code></pre>
+<p><strong>Add openssh to the onboot extension list:</strong></p>
+<pre class="sh"><code>echo &#39;openssh.tcz&#39; | sudo tee -a &quot;$(tce-status -d)/onboot.lst&quot;</code></pre>
+<p><strong>Save the backup:</strong></p>
+<pre class="sh"><code>filetool.sh -b</code></pre>
+<p>Reboot and verify:</p>
+<pre class="sh"><code>sudo reboot
+# then from the Debian machine:
+ssh -i ~/.ssh/id_ed25519 tc@&lt;machine-ip&gt; &#39;uname -a&#39;</code></pre>
+<hr />
+<h3 id="step-6b-hometc-restore-method-frugal-install">Step 6b — home/tc
+restore method (frugal install)</h3>
+<p>In a frugal install with <code>home=</code> and <code>opt=</code> in
+the boot parameters, <code>/home/tc/</code> and <code>/opt/</code> are
+mounted from disk and persist automatically. However, SSH host keys and
+<code>sshd_config</code> live under <code>/usr/local/etc/ssh/</code>,
+which is in RAM and resets on each boot. The solution is to store copies
+in <code>/home/tc/</code> and restore them at boot via a script.</p>
+<p><strong>Create the restore directory and copy the files into
+it:</strong></p>
+<pre class="sh"><code>mkdir -p /home/tc/openssh-setup/etc/ssh
+
+sudo cp /usr/local/etc/ssh/sshd_config        /home/tc/openssh-setup/etc/ssh/
+sudo cp /usr/local/etc/ssh/ssh_host_rsa_key     /home/tc/openssh-setup/etc/ssh/
+sudo cp /usr/local/etc/ssh/ssh_host_rsa_key.pub /home/tc/openssh-setup/etc/ssh/
+sudo cp /usr/local/etc/ssh/ssh_host_ecdsa_key     /home/tc/openssh-setup/etc/ssh/
+sudo cp /usr/local/etc/ssh/ssh_host_ecdsa_key.pub /home/tc/openssh-setup/etc/ssh/
+sudo cp /usr/local/etc/ssh/ssh_host_ed25519_key     /home/tc/openssh-setup/etc/ssh/
+sudo cp /usr/local/etc/ssh/ssh_host_ed25519_key.pub /home/tc/openssh-setup/etc/ssh/
+
+sudo chmod 600 /home/tc/openssh-setup/etc/ssh/ssh_host_*_key</code></pre>
+<p><strong>Create the restore script:</strong></p>
+<pre class="sh"><code>cat &gt; /home/tc/openssh-setup/restore.sh &lt;&lt; &#39;EOF&#39;
+#!/bin/sh
+# Restore SSH host keys and config from home/tc, then start sshd.
+SRC=/home/tc/openssh-setup/etc/ssh
+DST=/usr/local/etc/ssh
+
+cp &quot;$SRC/sshd_config&quot;               &quot;$DST/&quot;
+cp &quot;$SRC/ssh_host_rsa_key&quot;           &quot;$DST/&quot; &amp;&amp; chmod 600 &quot;$DST/ssh_host_rsa_key&quot;
+cp &quot;$SRC/ssh_host_rsa_key.pub&quot;       &quot;$DST/&quot;
+cp &quot;$SRC/ssh_host_ecdsa_key&quot;         &quot;$DST/&quot; &amp;&amp; chmod 600 &quot;$DST/ssh_host_ecdsa_key&quot;
+cp &quot;$SRC/ssh_host_ecdsa_key.pub&quot;     &quot;$DST/&quot;
+cp &quot;$SRC/ssh_host_ed25519_key&quot;       &quot;$DST/&quot; &amp;&amp; chmod 600 &quot;$DST/ssh_host_ed25519_key&quot;
+cp &quot;$SRC/ssh_host_ed25519_key.pub&quot;   &quot;$DST/&quot;
+
+/usr/local/etc/init.d/openssh start
+EOF
+
+chmod +x /home/tc/openssh-setup/restore.sh</code></pre>
+<p><strong>Register the restore script in bootlocal.sh:</strong></p>
+<pre class="sh"><code>echo &#39;/home/tc/openssh-setup/restore.sh&#39; | sudo tee -a /opt/bootlocal.sh</code></pre>
+<p>Because <code>opt=</code> is set, <code>/opt/bootlocal.sh</code> is
+on disk and this change persists automatically — no backup step
+needed.</p>
+<p><strong>Add openssh to the onboot extension list:</strong></p>
+<pre class="sh"><code>echo &#39;openssh.tcz&#39; | sudo tee -a &quot;$(tce-status -d)/onboot.lst&quot;</code></pre>
+<p>Reboot and verify:</p>
+<pre class="sh"><code>sudo reboot
+# then from the Debian machine:
+ssh -i ~/.ssh/id_ed25519 tc@&lt;machine-ip&gt; &#39;uname -a&#39;</code></pre>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 48%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Connection refused</code></td>
+<td>sshd not running</td>
+<td><code>sudo /usr/local/etc/init.d/openssh start</code></td>
+</tr>
+<tr class="even">
+<td><code>Permission denied (publickey)</code></td>
+<td>Key not in authorized_keys or wrong permissions</td>
+<td><code>~/.ssh</code> → 700, <code>authorized_keys</code> → 600</td>
+</tr>
+<tr class="odd">
+<td>No IP after reboot</td>
+<td>USB-Ethernet auto-detection failed</td>
+<td>Configure manually (see Prerequisites)</td>
+</tr>
+<tr class="even">
+<td>sshd not starting at boot</td>
+<td>Not in onboot.lst or bootlocal.sh not saved</td>
+<td>Re-run Step 6 and reboot</td>
+</tr>
+<tr class="odd">
+<td>Host key changed warning</td>
+<td>New keys generated after a RAM boot</td>
+<td>Replace with backed-up keys (Step 6b) or update
+<code>known_hosts</code> on Debian</td>
+</tr>
+<tr class="even">
+<td><code>tmux attach</code> fails:
+<code>missing or unsuitable terminal: tmux-256color</code></td>
+<td>Debian is inside tmux, so <code>$TERM=tmux-256color</code>; that
+terminfo entry doesn’t exist on the machine</td>
+<td>Connect with
+<code>TERM=xterm-256color ssh tc@&lt;machine-ip&gt;</code>, or see
+Appendix</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="appendix-ssh-client-config-on-the-debian-machine">Appendix — SSH
+client config on the Debian machine</h2>
+<p>Optional. Adding a <code>Host</code> entry to
+<code>~/.ssh/config</code> on the Debian machine lets you type
+<code>ssh machine</code> instead of the full command, and handles
+<code>TERM</code> automatically.</p>
+<pre><code>Host machine
+    HostName &lt;machine-ip&gt;
+    User tc
+    IdentityFile ~/.ssh/id_ed25519
+    SetEnv TERM=xterm-256color</code></pre>
+<p><strong>Note:</strong> <code>SetEnv</code> forwards the variable via
+environment forwarding, which requires <code>AcceptEnv TERM</code> in
+the machine’s <code>sshd_config</code>. If that line is absent, the
+server silently ignores it and the <code>tmux-256color</code> error will
+reappear. In that case, use the inline form instead — it sets
+<code>TERM</code> before the PTY is negotiated and works
+unconditionally:</p>
+<pre class="sh"><code>TERM=xterm-256color ssh machine</code></pre>
+</body></html>
