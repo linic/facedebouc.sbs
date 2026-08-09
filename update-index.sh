@@ -2,12 +2,13 @@
 
 source "$(dirname "$0")/common.sh"
 
-if [[ $# -ne 1 ]]; then
-  echo "Usage: $0 <html_file>"
+if [[ $# -ne 2 ]]; then
+  echo "Usage: $0 <html_file> <index_section_id>"
   exit 1
 fi
 
 html_file="$1"
+index_section_id="$2"
 index_file="index.html"
 
 if [[ ! -f "$html_file" ]]; then
@@ -49,7 +50,7 @@ declare -a all_links
 
 while IFS= read -r line; do
   # Check if entering the target section
-  if [[ $line =~ \<h1\ id=\"$dir\" ]]; then
+  if [[ $line =~ \<h1\ id=\"$index_section_id\" ]]; then
     in_target_section=true
     section_found=true
     echo "$line" >> "$temp_file"
@@ -95,10 +96,12 @@ done < "$index_file"
 # If section wasn't found, create it
 if ! $section_found; then
   # Find the closing </body></html> and insert new section before it
-  sed -i "/<\/body><\/html>/i\\
-<h1 id=\"$dir\">$dir</h1><div>\\
+  echo "Section $index_section_id not found. Copy the following output in index.html."
+  echo "/<\/body><\/html>/i\\
+<h1 id=\"$index_section_id\">$index_section_id</h1><div>\\
 $new_link\\
-</div>" "$temp_file"
+</div>"
+  exit 0
 fi
 
 mv "$temp_file" "$index_file"
